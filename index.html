@@ -1,0 +1,67 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Configurator</title>
+  <meta name="viewport" content="width=device-width">
+  <!-- Styles -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+  
+<body>
+  
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-6 configure">
+        <h2>Configure your tool</h2>
+        <form id="nav-config" onchange="displayResults()">
+          <label>Pipe Size:</label>
+          <select name="pipe-size">
+            <option value="2 in">2 in.</option>
+            <option value="2.5 in">2.5 in.</option>
+            <option value="3 in">3 in.</option>
+            <option value="4 in">4 in.</option>
+          </select><br>
+
+          <label>Hose Size:</label>
+          <select name="hose-size">
+            <option value="4/4">4/4</option>
+            <option value="5/4">5/4</option>
+            <option value="6/4">6/4</option>
+          </select><br>
+
+          <label>Does the pipe have a flange? &nbsp;</label><input type="radio" name="flange" value="yes" checked> Yes
+          <input type="radio" name="flange" value="no"> No<br>
+
+          <label>(If no) will you require a splash plate? &nbsp;</label><input type="radio" name="plate" value="yes" checked> Yes
+          <input type="radio" name="plate" value="no"> No<br>
+        </form>
+
+      </div>
+      
+      <div class="col-sm-6 result">
+        <h2>Results</h2>
+        <p id="pipe-size">Click Update to show results</p>
+        <p id="hose-size"></p>
+        <p id="flange"></p>
+        <p id="plate"></p>
+        
+        <button onclick="displayResults()">Update</button>
+      </div>
+    </div>
+  </div>
+  
+  
+  <!-- JQuery -->
+  <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+  
+  <!-- Bootstrap -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  
+  <!-- App -->
+  <script src="js/plswork.js"></script>
+  
+</body>
+</html>
