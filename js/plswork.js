@@ -42,8 +42,8 @@ function displayResults() {
   var flangeType = getRadioVal(document.getElementById("nav-config"), "flange");
   var splashPlate = getRadioVal(document.getElementById("nav-config"), 'plate');
   
-  document.getElementById("pipe-size").innerHTML = "Pipe Size: " + pipeSize;
-  document.getElementById("hose-size").innerHTML = hoseSize;
-  document.getElementById("flange").innerHTML = flangeType;
-  document.getElementById("plate").innerHTML = splashPlate;
+  document.getElementById("pipe-size").innerHTML = "Pipe size: " + pipeSize;
+  document.getElementById("hose-size").innerHTML =  "Hose size: " + hoseSize;
+  document.getElementById("flange").innerHTML =  "Flange: " + flangeType;
+  document.getElementById("plate").innerHTML = "Splash plate: " + splashPlate;
 }

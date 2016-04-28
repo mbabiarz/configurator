@@ -10,13 +10,14 @@
   <link rel="stylesheet" href="styles/main.css">
 </head>
   
-<body>
+<body onload="displayResults()">
   
   <div class="container">
     <div class="row">
       <div class="col-sm-6 configure">
         <h2>Configure your tool</h2>
         <form id="nav-config" onchange="displayResults()">
+          
           <label>Pipe Size:</label>
           <select name="pipe-size">
             <option value="2 in">2 in.</option>
@@ -32,34 +33,29 @@
             <option value="6/4">6/4</option>
           </select><br>
 
-          <div>
-            <label>Does the pipe have a flange? &nbsp;</label><input type="radio" name="flange" value="yes" checked> Yes
-            <input type="radio" name="flange" value="no"> No<br>
-          </div>
+          <label>Does the pipe have a flange? &nbsp;</label><input type="radio" name="flange" value="yes" checked> Yes
+          <input type="radio" name="flange" value="no"> No<br>
 
           <div class="depends">
             <label>Will you require a splash plate? &nbsp;</label><input type="radio" name="plate" value="yes" checked> Yes
             <input type="radio" name="plate" value="no"> No<br>
           </div>
+          
         </form>
 
       </div>
       
       <div class="col-sm-6 result">
         <h2>Results</h2>
-        <p id="pipe-size">Click Update to show results</p>
+        <p id="pipe-size"></p>
         <p id="hose-size"></p>
         <p id="flange"></p>
         <p id="plate" class="depends"></p>
-        
-        <button onclick="displayResults()">Update</button>
       </div>
     </div>
   </div>
   
   
-  <!-- JQuery -->
-  <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
   
   <!-- Bootstrap -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
