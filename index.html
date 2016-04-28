@@ -32,11 +32,15 @@
             <option value="6/4">6/4</option>
           </select><br>
 
-          <label>Does the pipe have a flange? &nbsp;</label><input type="radio" name="flange" value="yes" checked> Yes
-          <input type="radio" name="flange" value="no"> No<br>
+          <div>
+            <label>Does the pipe have a flange? &nbsp;</label><input type="radio" name="flange" value="yes" checked> Yes
+            <input type="radio" name="flange" value="no"> No<br>
+          </div>
 
-          <label>(If no) will you require a splash plate? &nbsp;</label><input type="radio" name="plate" value="yes" checked> Yes
-          <input type="radio" name="plate" value="no"> No<br>
+          <div class="depends">
+            <label>Will you require a splash plate? &nbsp;</label><input type="radio" name="plate" value="yes" checked> Yes
+            <input type="radio" name="plate" value="no"> No<br>
+          </div>
         </form>
 
       </div>
@@ -46,7 +50,7 @@
         <p id="pipe-size">Click Update to show results</p>
         <p id="hose-size"></p>
         <p id="flange"></p>
-        <p id="plate"></p>
+        <p id="plate" class="depends"></p>
         
         <button onclick="displayResults()">Update</button>
       </div>
