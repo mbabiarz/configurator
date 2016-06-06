@@ -36,9 +36,9 @@ var App = React.createClass({
     
     return (      
       <div>
-        <div className="col-md-4">
+        <div className="col-sm-6">
           <h2>Configure your equipment</h2>
-        
+      
           {/* PIPE SIZE */}
           <div>
             <label htmlFor="pipeSize">Pipe Size</label>
@@ -49,6 +49,7 @@ var App = React.createClass({
             <option value='4 in.'>4 in.</option>
             </select>
           </div>
+          
 
           {/* HOSE SIZE */}
           <div>
@@ -99,7 +100,7 @@ var App = React.createClass({
 
         
         {/* RESULTS */}
-        <div className="col-md-4">
+        <div className="col-sm-6">
           <h2>Results</h2>
           <p>Pipe Size: {this.state.pipeSize}<br/>
             Hose Size: {this.state.hoseSize}<br/>{this.state.flange ? 'Flange: yes' : 'Flange: no'}<br/>
