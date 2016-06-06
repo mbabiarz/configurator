@@ -18,7 +18,6 @@ var App = React.createClass({
   // TODO: we can probably refactor to a single change handler for select options that change state
   setPipeSize: function(e) {
     this.setState({ pipeSize: e.target.value });
-//    console.log(pipeSize.value);
   },
   
   setHoseSize: function(e) {
@@ -29,28 +28,16 @@ var App = React.createClass({
     this.setState({ hoseKit: e.target.value });
   },
   
-//  Matt's checkbox example
-//  handleCheck: function(e) {
-//    this.setState({isChecked: !this.state.isChecked});
-//  },
-//  toggleValue: function (event) {
-//    var val = event.currentTarget;
-//    var newVal = {};
-//    newVal[val.id] = val.checked;
-//    this.setState(newVal);
-//  },
-  
   
   //*****  RENDERING
   
   render: function() {
-//    var text = this.state.liked ? 'like' : 'haven\'t liked';
     var styleInline = { display:'inline' };
     
     return (      
       <div>
         <div className="col-md-4">
-          <h2>Configure your tool</h2>
+          <h2>Configure your equipment</h2>
         
           {/* PIPE SIZE */}
           <div>
@@ -95,8 +82,8 @@ var App = React.createClass({
 
           {/* HOSE KIT */}
           <div>
-            <label htmlFor="pipeSize">Hose Kit</label>
-            <select id="pipeSize" defaultValue={this.state.hoseKit} onChange={this.setHoseKit}>
+            <label htmlFor="hoseKit">Hose Kit</label>
+            <select id="hoseKit" defaultValue={this.state.hoseKit} onChange={this.setHoseKit}>
             <option value='None'>None</option>
             <option value='75 ft'>75 ft</option>
             <option value='100 ft'>100 ft</option>
@@ -108,14 +95,6 @@ var App = React.createClass({
                 <li>22k Banshee Beetle rotary tool</li>
               </ul>
           </div>
-
-
-          {/* Matt's checkbox   
-          <div>
-            <p>Choose a hose kit (optional):
-            <input id="splashPlate" defaultChecked={this.state.splashPlate} type="checkbox" onChange={this.toggleValue}/>
-            <label htmlFor="splashPlate"> Splash Plate</label>
-          </div> */} 
         </div>
 
         
@@ -134,10 +113,10 @@ var App = React.createClass({
             {this.state.done && (
               <form action="https://formspree.io/margaret.babiarz@stoneagetools.com"
       method="POST">
-                <input type="hidden" name="Example" value={this.state.flange} />
-                <input type="text" name="Name" placeholder="Full Name"/>
-                <input type="text" name="company" placeholder="Company Name"/>
-                <input type="email" name="_replyto" placeholder="Work Email"/>
+                <input type="hidden" name="Example" value={this.state.flange} /><br/>
+                <input type="text" name="Name" placeholder="Full Name"/><br/>
+                <input type="text" name="company" placeholder="Company Name"/><br/>
+                <input type="email" name="_replyto" placeholder="Work Email"/><br/>
                 <input type="submit" value="Send"/>
               </form>
             )}
@@ -149,7 +128,9 @@ var App = React.createClass({
   }
 });
 
+var destination =  document.querySelector("#appContent");
+
 ReactDOM.render(
   <App />,
-  document.getElementById('content')
+  destination
 );
