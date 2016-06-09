@@ -88,6 +88,7 @@ const App = React.createClass({
       addFlangeMount: false,
       addStrapMount: false,
       addNozzle: 'no',
+      notes: '',
       done: false,
     };
   },
@@ -128,6 +129,11 @@ const App = React.createClass({
     this.setState({ addNozzle: e.target.value });
   },
   
+  
+  setNotes: function(e) {
+    this.setState({ notes: e.target.value });
+  },
+  
   render() {
     var styleInline = { display:'inline' };
     
@@ -141,7 +147,7 @@ const App = React.createClass({
             <div>
               {/* PIPE SIZE */}
               <div>
-                <label htmlFor="pipeSize">Pipe Size</label>
+                <label htmlFor="pipeSize" className="even">Pipe Size</label>
                 <select id="pipeSize" defaultValue={this.state.pipeSize} onChange={this.setPipeSize}>
                 <option value='2 in.'>2 in.</option>
                 <option value='2.5 in.'>2.5 in.</option>
@@ -152,7 +158,7 @@ const App = React.createClass({
       
               {/* HOSE SIZE */}
               <div>
-                <label htmlFor="hoseSize"> Hose Size</label>
+                <label htmlFor="hoseSize" className="even"> Hose Size</label>
                 <select id="hoseSize" defaultValue={this.state.hoseSize} onChange={this.setHoseSize}>
                 <option value="4/4">4/4</option>
                 <option value="5/4">5/4</option>
@@ -162,7 +168,7 @@ const App = React.createClass({
           
               {/* FLANGE */}
               <div>
-                <p style={styleInline}><strong>Does the pipe have a flange?</strong></p>
+                <p style={styleInline}>Does the pipe have a flange?</p>
                 <input type="radio" name="flange" onClick={this.updateRadio.bind(null, {flange: true})} value="true" checked={this.state.flange} />
                 <label> Yes</label>
                 <input type="radio" name="flange" onClick={this.updateRadio.bind(null, {flange: false})} value="false" checked={!this.state.flange} />
@@ -187,7 +193,7 @@ const App = React.createClass({
             <div>
               {/* ADD HOSE */}
               <div>
-                <label htmlFor="addHose">Add Hose</label>
+                <label htmlFor="addHose" className="even">Add Hose</label>
                 <select id="addHose" defaultValue={this.state.addHose} onChange={this.setAddHose}>
                 <option value='None'>None</option>
                 <option value='75 ft'>75 ft</option>
@@ -197,7 +203,7 @@ const App = React.createClass({
                 
               {/* ADD COLLET */}
               <div>
-                <label htmlFor="addCollet">Add Collet</label>
+                <label htmlFor="addCollet" className="even">Add Collet</label>
                 <select id="hoseKit" defaultValue={this.state.addCollet} onChange={this.setAddCollet}>
                 <option value='None'>None</option>
                 <option value='FF 121-438'> Single, .438</option>
@@ -205,6 +211,16 @@ const App = React.createClass({
                 <option value='FF 121-484'>Single, .484</option>
                 <option value='FF 121-516'>Single, .516</option>
                 <option value='NAV 621'>Kit,  .438–.516</option>
+                </select>
+              </div>
+              
+              {/* ADD NOZZLE */}
+              <div>
+                <label htmlFor="addNozzle" className="even">Add Nozzle </label>
+                <select id="addNozzle" defaultValue={this.state.addNozzle} onChange={this.setAddNozzle}>
+                <option value='None'>None</option>
+                <option value='BT25-MP6R-C'>Banshee, 22k psi (12-15 gpm)</option>
+                <option value='BT25-MP6R-A'>Banshee, 22k psi (13-20 gpm)</option>
                 </select>
               </div>
                 
@@ -220,34 +236,34 @@ const App = React.createClass({
                 <input id="addStrapMount" defaultChecked={this.state.addStrapMount} type="checkbox" onChange={this.toggleValue}/>
                 <label htmlFor="addStrapMount"> Strap Mount Assembly</label><br/>
                 
-                <label htmlFor="addNozzle">Add Nozzle </label>
-                <select id="addNozzle" defaultValue={this.state.addNozzle} onChange={this.setAddNozzle}>
-                <option value='None'>None</option>
-                <option value='BT25-MP6R-C'>Banshee Tube Spinner, 22k psi (12-15 gpm)</option>
-                <option value='BT25-MP6R-A'>Banshee Tube Spinner, 22k psi (13-20 gpm)</option>
-                </select>
               </div>
                 
             </div>
           </Pane>
                 
           <Pane label="3. Notes">
-            <div>This is my tab 3 contents!</div>
+            <p>Add instructions or other info:</p>
+            <textarea
+              type="text"
+              name="notes"
+              value={this.state.value}           onChange={this.setNotes}
+            />
           </Pane>
             
-          <Pane label="4. Results">
+          <Pane label="4. Summary">
             <div>
-              <p>Pipe Size: {this.state.pipeSize}<br/>
-                Hose Size: {this.state.hoseSize}<br/>{this.state.flange ? 'Flange: yes' : 'Flange: no'}<br/>
-                {!this.state.flange && this.state.plate ? 'Plate: yes' : 'Plate: no'}<br/>
-                <strong>Optional Items</strong><br/>
-                Add Hose: {this.state.addHose}<br/>
-                Add Collet: {this.state.addCollet}<br/>
-                Add Roller: {this.state.addRoller ? 'PRO 174-46' : 'no'}<br/>
-                Add Flange Mount: {this.state.addFlangeMount ? 'BOP 010-4-8' : 'no'}<br/>
-                Add Strap Mount: {this.state.addStrapMount ? 'BOP 050' : 'no'}<br/>
-                Add Nozzle: {this.state.addNozzle}<br/>
-              </p>
+              <h2>Parameters</h2>
+              Pipe Size: {this.state.pipeSize}<br/>
+              Hose Size: {this.state.hoseSize}<br/>{this.state.flange ? 'Flange: yes' : 'Flange: no'}<br/>
+              {!this.state.flange && this.state.plate ? 'Plate: yes' : 'Plate: no'}<br/>
+              <h2>Optional Items</h2>
+              Add Hose: {this.state.addHose}<br/>
+              Add Collet: {this.state.addCollet}<br/>
+              Add Roller: {this.state.addRoller ? 'PRO 174-46' : 'no'}<br/>
+              Add Flange Mount: {this.state.addFlangeMount ? 'BOP 010-4-8' : 'no'}<br/>
+              Add Strap Mount: {this.state.addStrapMount ? 'BOP 050' : 'no'}<br/>
+              Add Nozzle: {this.state.addNozzle}<br/>
+              Notes: {this.state.notes}
             </div>
           </Pane>
         </Tabs>
