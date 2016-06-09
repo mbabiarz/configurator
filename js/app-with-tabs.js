@@ -50,6 +50,7 @@ const Tabs = React.createClass({
     );
   },
   render() {
+    console.log('Tabs:render', this.props);
     return (
       <div className="tabs">
         {this._renderTitles()}
@@ -65,10 +66,12 @@ const Pane = React.createClass({
     label: React.PropTypes.string.isRequired,
     children: React.PropTypes.element.isRequired
   },
+  doSomething () {alert('hi')},
   render() {
     return (
       <div>
         {this.props.children}
+        {false && this.props.label === '4. Summary' ? <button onClick={this.doSomething}>Submit</button> : <button onClick={this.doSomething}>Next</button>}
       </div>
     );
   }
@@ -90,6 +93,7 @@ const App = React.createClass({
       addNozzle: 'no',
       notes: '',
       done: false,
+      tab: 1,
     };
   },
   
@@ -106,6 +110,11 @@ const App = React.createClass({
     var newVal = {};
     newVal[val.id] = val.checked;
     this.setState(newVal);
+  },
+  
+  doSomething: function (tab) {
+    console.log('doSomething', tab);
+    this.setState({tab: tab});
   },
   
   // TODO: we can probably refactor to a single change handler for select options that change state
@@ -135,14 +144,36 @@ const App = React.createClass({
   },
   
   render() {
+    console.log('render', this.state);
     var styleInline = { display:'inline' };
+    var tab = this.state.tab;
     
     return (
       <div>
       
         <h2>Configure your equipment</h2>
       
-        <Tabs selected={0}>
+        <div>
+          <span onClick={this.doSomething.bind(null, 1)}>Tab 1</span>
+          <span onClick={this.doSomething.bind(null, 2)}>Tab 2</span>
+          <button onClick={this.doSomething.bind(null, 3)}>Tab 3</button>
+          <button onClick={this.doSomething.bind(null, 4)}>Tab 4</button>
+          {tab === 1 && (
+            <div>Tab 1
+              <button onClick={this.doSomething.bind(null, 2)}>Next</button>
+            </div>
+          )}
+          {tab === 2 && (
+            <div>Tab 2
+              <button onClick={this.doSomething.bind(null, 1)}>Prev</button>
+              <button onClick={this.doSomething.bind(null, 3)}>Next</button>
+            </div>
+          )}
+          {tab === 3 && <div>Tab 3</div>}
+          {tab === 4 && <div>Tab 4</div>}
+        </div>
+      
+        <Tabs selected={this.state.tab}>
           <Pane label="1. Parameters">
             <div>
               {/* PIPE SIZE */}
@@ -185,7 +216,7 @@ const App = React.createClass({
                   <label> No</label>
                 </div>
               )}
-      
+              <button onClick={this.doSomething.bind(null, 2)}>Next</button>
             </div>
           </Pane>
             
@@ -237,17 +268,20 @@ const App = React.createClass({
                 <label htmlFor="addStrapMount"> Strap Mount Assembly</label><br/>
                 
               </div>
-                
+              <button onClick={this.doSomething}>Prev</button>
+              <button onClick={this.doSomething}>Next</button>
             </div>
           </Pane>
                 
           <Pane label="3. Notes">
-            <p>Add instructions or other info:</p>
-            <textarea
-              type="text"
-              name="notes"
-              value={this.state.value}           onChange={this.setNotes}
-            />
+            <div>
+              <p>Add instructions or other info:</p>
+              <textarea
+                type="text"
+                name="notes"
+                value={this.state.value}           onChange={this.setNotes}
+              />
+            </div>
           </Pane>
             
           <Pane label="4. Summary">
