@@ -1,82 +1,3 @@
-const Tabs = React.createClass({
-  displayName: 'Tabs',
-  propTypes: {
-    selected: React.PropTypes.number,
-    children: React.PropTypes.oneOfType([
-      React.PropTypes.array,
-      React.PropTypes.element
-    ]).isRequired
-  },
-  getDefaultProps() {
-    return {
-      selected: 0
-    };
-  },
-  getInitialState() {
-    return {
-      selected: this.props.selected
-    };
-  },
-  handleClick(index, event) {
-    event.preventDefault();
-    this.setState({
-      selected: index
-    });
-  },
-  _renderTitles() {
-    function labels(child, index) {
-      let activeClass = (this.state.selected === index ? 'active' : '');
-      return (
-        <li key={index}>
-          <a href="#" 
-            className={activeClass}
-            onClick={this.handleClick.bind(this, index)}>
-            {child.props.label}
-          </a>
-        </li>
-      );
-    }
-    return (
-      <ul className="tabs__labels">
-        {this.props.children.map(labels.bind(this))}
-      </ul>
-    );
-  },
-  _renderContent() {
-    return (
-      <div className="tabs__content">
-        {this.props.children[this.state.selected]}
-      </div>
-    );
-  },
-  render() {
-    console.log('Tabs:render', this.props);
-    return (
-      <div className="tabs">
-        {this._renderTitles()}
-        {this._renderContent()}
-      </div>
-    );
-  }
-});
-
-const Pane = React.createClass({
-  displayName: 'Pane',
-  propTypes: {
-    label: React.PropTypes.string.isRequired,
-    children: React.PropTypes.element.isRequired
-  },
-  doSomething () {alert('hi')},
-  render() {
-    return (
-      <div>
-        {this.props.children}
-        {false && this.props.label === '4. Summary' ? <button onClick={this.doSomething}>Submit</button> : <button onClick={this.doSomething}>Next</button>}
-      </div>
-    );
-  }
-});
-
 const App = React.createClass({
   getInitialState: function () {
     return {
@@ -93,8 +14,12 @@ const App = React.createClass({
       addNozzle: 'no',
       notes: '',
       done: false,
-      tab: 1,
+      tab: 1
     };
+  },
+  
+  changeTab: function (tab) {
+    this.setState({tab: tab});
   },
   
   updateRadio: function (nextState) {
@@ -110,11 +35,6 @@ const App = React.createClass({
     var newVal = {};
     newVal[val.id] = val.checked;
     this.setState(newVal);
-  },
-  
-  doSomething: function (tab) {
-    console.log('doSomething', tab);
-    this.setState({tab: tab});
   },
   
   // TODO: we can probably refactor to a single change handler for select options that change state
@@ -144,163 +64,196 @@ const App = React.createClass({
   },
   
   render() {
-    console.log('render', this.state);
     var styleInline = { display:'inline' };
+    var marginLeft21 = { marginLeft:'21px' }; 
     var tab = this.state.tab;
     
     return (
       <div>
       
-        <h2>Configure your equipment</h2>
-      
-        <div>
-          <span onClick={this.doSomething.bind(null, 1)}>Tab 1</span>
-          <span onClick={this.doSomething.bind(null, 2)}>Tab 2</span>
-          <button onClick={this.doSomething.bind(null, 3)}>Tab 3</button>
-          <button onClick={this.doSomething.bind(null, 4)}>Tab 4</button>
-          {tab === 1 && (
-            <div>Tab 1
-              <button onClick={this.doSomething.bind(null, 2)}>Next</button>
+        <h1>Configure your equipment</h1>
+        
+        {/* TAB NAV */}
+        <span onClick={this.changeTab.bind(null, 1)} className="tab-nav tab-nav-active">1. Parameters</span>
+        <span onClick={this.changeTab.bind(null, 2)} className="tab-nav">2. Options</span>
+        <span onClick={this.changeTab.bind(null, 3)} className="tab-nav">3. Notes</span>
+        <span onClick={this.changeTab.bind(null, 4)} className="tab-nav">4. Summary</span>
+
+        {/* TAB 1 CONTENT */}
+        {tab === 1 && (
+          <div className="tab-content">
+            {/* PIPE SIZE */}
+            <div className="tab-row bg-lt-grey">
+              <label htmlFor="pipeSize" className="even">Pipe Size</label>
+              <select id="pipeSize" defaultValue={this.state.pipeSize} onChange={this.setPipeSize}>
+              <option value='2 in.'>2 in.</option>
+              <option value='2.5 in.'>2.5 in.</option>
+              <option value='3 in.'>3 in.</option>
+              <option value='4 in.'>4 in.</option>
+              </select>
             </div>
-          )}
-          {tab === 2 && (
-            <div>Tab 2
-              <button onClick={this.doSomething.bind(null, 1)}>Prev</button>
-              <button onClick={this.doSomething.bind(null, 3)}>Next</button>
+
+            {/* HOSE SIZE */}
+            <div className="tab-row">
+              <label htmlFor="hoseSize" className="even"> Hose Size</label>
+              <select id="hoseSize" defaultValue={this.state.hoseSize} onChange={this.setHoseSize}>
+              <option value="4/4">4/4</option>
+              <option value="5/4">5/4</option>
+              <option value="6/4">6/4</option>
+              </select>
             </div>
-          )}
-          {tab === 3 && <div>Tab 3</div>}
-          {tab === 4 && <div>Tab 4</div>}
-        </div>
-      
-        <Tabs selected={this.state.tab}>
-          <Pane label="1. Parameters">
-            <div>
-              {/* PIPE SIZE */}
-              <div>
-                <label htmlFor="pipeSize" className="even">Pipe Size</label>
-                <select id="pipeSize" defaultValue={this.state.pipeSize} onChange={this.setPipeSize}>
-                <option value='2 in.'>2 in.</option>
-                <option value='2.5 in.'>2.5 in.</option>
-                <option value='3 in.'>3 in.</option>
-                <option value='4 in.'>4 in.</option>
-                </select>
-              </div>
-      
-              {/* HOSE SIZE */}
-              <div>
-                <label htmlFor="hoseSize" className="even"> Hose Size</label>
-                <select id="hoseSize" defaultValue={this.state.hoseSize} onChange={this.setHoseSize}>
-                <option value="4/4">4/4</option>
-                <option value="5/4">5/4</option>
-                <option value="6/4">6/4</option>
-                </select>
-              </div>
-          
+
+            <div className="tab-row bg-lt-grey">
               {/* FLANGE */}
               <div>
-                <p style={styleInline}>Does the pipe have a flange?</p>
-                <input type="radio" name="flange" onClick={this.updateRadio.bind(null, {flange: true})} value="true" checked={this.state.flange} />
+                <label>Does the pipe have a flange?</label>
+                <input type="radio" name="flange" onChange={this.updateRadio.bind(null, {flange: true})} value="true" checked={this.state.flange} style={marginLeft21} />
                 <label> Yes</label>
-                <input type="radio" name="flange" onClick={this.updateRadio.bind(null, {flange: false})} value="false" checked={!this.state.flange} />
+                <input type="radio" name="flange" onChange={this.updateRadio.bind(null, {flange: false})} value="false" checked={!this.state.flange} />
                 <label> No</label>
               </div>
 
               {/* PLATE */}                    
               {!this.state.flange && (
                 <div>
-                  <p style={styleInline}><strong>Will you require a splash plate?</strong></p>
-                  <input type="radio" name="plate" onClick={this.updateRadio.bind(null, {plate: true})} value="true" checked={this.state.plate} />
+                  <label>Will you require a splash plate?</label>
+                  <input type="radio" name="plate" onChange={this.updateRadio.bind(null, {plate: true})} value="true" checked={this.state.plate} />
                   <label> Yes</label>
-                  <input type="radio" name="plate" onClick={this.updateRadio.bind(null, {plate: false})} value="false" checked={!this.state.plate} />
+                  <input type="radio" name="plate" onChange={this.updateRadio.bind(null, {plate: false})} value="false" checked={!this.state.plate} />
                   <label> No</label>
                 </div>
               )}
-              <button onClick={this.doSomething.bind(null, 2)}>Next</button>
             </div>
-          </Pane>
-            
-          <Pane label="2. Options">
-            <div>
-              {/* ADD HOSE */}
-              <div>
-                <label htmlFor="addHose" className="even">Add Hose</label>
-                <select id="addHose" defaultValue={this.state.addHose} onChange={this.setAddHose}>
-                <option value='None'>None</option>
-                <option value='75 ft'>75 ft</option>
-                <option value='100 ft'>100 ft</option>
-                </select>
-              </div>
-                
-              {/* ADD COLLET */}
-              <div>
-                <label htmlFor="addCollet" className="even">Add Collet</label>
-                <select id="hoseKit" defaultValue={this.state.addCollet} onChange={this.setAddCollet}>
-                <option value='None'>None</option>
-                <option value='FF 121-438'> Single, .438</option>
-                <option value='FF 121-460'>Single, .460</option>
-                <option value='FF 121-484'>Single, .484</option>
-                <option value='FF 121-516'>Single, .516</option>
-                <option value='NAV 621'>Kit,  .438–.516</option>
-                </select>
-              </div>
-              
-              {/* ADD NOZZLE */}
-              <div>
-                <label htmlFor="addNozzle" className="even">Add Nozzle </label>
-                <select id="addNozzle" defaultValue={this.state.addNozzle} onChange={this.setAddNozzle}>
-                <option value='None'>None</option>
-                <option value='BT25-MP6R-C'>Banshee, 22k psi (12-15 gpm)</option>
-                <option value='BT25-MP6R-A'>Banshee, 22k psi (13-20 gpm)</option>
-                </select>
-              </div>
-                
-              {/* ADD OTHER */}
-              <div>
-                <h3>Other Options</h3>
-                <input id="addRoller" defaultChecked={this.state.addRoller} type="checkbox" onChange={this.toggleValue}/>
-                <label htmlFor="addRoller"> Roller, .460</label><br/>
-                
-                <input id="addFlangeMount" defaultChecked={this.state.addFlangeMount} type="checkbox" onChange={this.toggleValue}/>
-                <label htmlFor="addFlangeMount"> Flange Mount Base Plate Assembly</label><br/>
-                
-                <input id="addStrapMount" defaultChecked={this.state.addStrapMount} type="checkbox" onChange={this.toggleValue}/>
-                <label htmlFor="addStrapMount"> Strap Mount Assembly</label><br/>
-                
-              </div>
-              <button onClick={this.doSomething}>Prev</button>
-              <button onClick={this.doSomething}>Next</button>
+
+            <div className="prev-next">
+              <button onClick={this.changeTab.bind(null, 2)} className="pull-right btn btn-gray">Next: Options</button>
             </div>
-          </Pane>
-                
-          <Pane label="3. Notes">
-            <div>
-              <p>Add instructions or other info:</p>
-              <textarea
-                type="text"
-                name="notes"
-                value={this.state.value}           onChange={this.setNotes}
-              />
+          </div>
+        )}
+        
+        {/* TAB 2 CONTENT */}
+        {tab === 2 && (
+          <div className="tab-content">
+            {/* ADD HOSE */}
+            <div className="tab-row bg-lt-grey">
+              <label htmlFor="addHose" className="even">Add Hose</label>
+              <select id="addHose" defaultValue={this.state.addHose} onChange={this.setAddHose}>
+              <option value='None'>None</option>
+              <option value='75 ft'>75 ft</option>
+              <option value='100 ft'>100 ft</option>
+              </select>
             </div>
-          </Pane>
-            
-          <Pane label="4. Summary">
+
+            {/* ADD COLLET */}
+            <div className="tab-row">
+              <label htmlFor="addCollet" className="even">Add Collet</label>
+              <select id="hoseKit" defaultValue={this.state.addCollet} onChange={this.setAddCollet}>
+              <option value='None'>None</option>
+              <option value='FF 121-438'> Single, .438</option>
+              <option value='FF 121-460'>Single, .460</option>
+              <option value='FF 121-484'>Single, .484</option>
+              <option value='FF 121-516'>Single, .516</option>
+              <option value='NAV 621'>Kit,  .438–.516</option>
+              </select>
+            </div>
+
+            {/* ADD NOZZLE */}
+            <div className="tab-row bg-lt-grey">
+              <label htmlFor="addNozzle" className="even">Add Nozzle </label>
+              <select id="addNozzle" defaultValue={this.state.addNozzle} onChange={this.setAddNozzle}>
+              <option value='None'>None</option>
+              <option value='BT25-MP6R-C'>Banshee, 22k psi (12-15 gpm)</option>
+              <option value='BT25-MP6R-A'>Banshee, 22k psi (13-20 gpm)</option>
+              </select>
+            </div>
+
+            {/* ADD OTHER */}
             <div>
+              <h3>Other Options</h3>
+              <input id="addRoller" defaultChecked={this.state.addRoller} type="checkbox" onChange={this.toggleValue}/>
+              <label htmlFor="addRoller"> Roller, .460</label><br/>
+
+              <input id="addFlangeMount" defaultChecked={this.state.addFlangeMount} type="checkbox" onChange={this.toggleValue}/>
+              <label htmlFor="addFlangeMount"> Flange Mount Base Plate Assembly</label><br/>
+
+              <input id="addStrapMount" defaultChecked={this.state.addStrapMount} type="checkbox" onChange={this.toggleValue}/>
+              <label htmlFor="addStrapMount"> Strap Mount Assembly</label><br/>
+
+            </div>
+            <div className="prev-next">
+              <button onClick={this.changeTab.bind(null, 1)} className="pull-left btn btn-gray">Previous</button>
+              <button onClick={this.changeTab.bind(null, 3)} className="pull-right btn btn-gray">Next: Notes</button>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 3 CONTENT */}
+        {tab === 3 && (
+          <div className="tab-content">
+            <div className="tab-row">
+              <label>Add instructions or other info:</label>
+                <textarea
+                  type="text"
+                  name="notes"
+                  value={this.state.value}           onChange={this.setNotes}
+                  className="msg-box"
+                />
+            </div>
+            <div className="prev-next">
+              <button onClick={this.changeTab.bind(null, 2)} className="pull-left btn btn-gray">Previous</button>
+              <button onClick={this.changeTab.bind(null, 4)} className="pull-right btn btn-gray">Next: Summary</button>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 4 CONTENT */}
+        {tab === 4 && (
+          <div className="tab-content">
+            <div className="tab-row">
               <h2>Parameters</h2>
-              Pipe Size: {this.state.pipeSize}<br/>
-              Hose Size: {this.state.hoseSize}<br/>{this.state.flange ? 'Flange: yes' : 'Flange: no'}<br/>
-              {!this.state.flange && this.state.plate ? 'Plate: yes' : 'Plate: no'}<br/>
-              <h2>Optional Items</h2>
-              Add Hose: {this.state.addHose}<br/>
-              Add Collet: {this.state.addCollet}<br/>
-              Add Roller: {this.state.addRoller ? 'PRO 174-46' : 'no'}<br/>
-              Add Flange Mount: {this.state.addFlangeMount ? 'BOP 010-4-8' : 'no'}<br/>
-              Add Strap Mount: {this.state.addStrapMount ? 'BOP 050' : 'no'}<br/>
-              Add Nozzle: {this.state.addNozzle}<br/>
-              Notes: {this.state.notes}
+                <strong>Pipe Size:</strong> {this.state.pipeSize}<br/>
+                Hose Size: {this.state.hoseSize}<br/>{this.state.flange ? 'Flange: yes' : 'Flange: no'}<br/>
+                {!this.state.flange && this.state.plate ? 'Plate: yes' : 'Plate: no'}<br/>
+                <h2>Optional Items</h2>
+                Add Hose: {this.state.addHose}<br/>
+                Add Collet: {this.state.addCollet}<br/>
+                Add Roller: {this.state.addRoller ? 'PRO 174-46' : 'no'}<br/>
+                Add Flange Mount: {this.state.addFlangeMount ? 'BOP 010-4-8' : 'no'}<br/>
+                Add Strap Mount: {this.state.addStrapMount ? 'BOP 050' : 'no'}<br/>
+                Add Nozzle: {this.state.addNozzle}<br/>
+                Notes: {this.state.notes}
             </div>
-          </Pane>
-        </Tabs>
+            <div className="prev-next">
+              
+              {!this.state.done && <button onClick={this.changeTab.bind(null, 3)} className="pull-left btn btn-gray">Previous</button>}
+        
+              {!this.state.done && <input type="button" value="Get a Quote" onClick={this.updateRadio.bind(null, {done: true})} className="pull-right btn" />}
+
+              {this.state.done && (
+                <form action="https://formspree.io/margaret.babiarz@stoneagetools.com"
+        method="POST" className="send-form">
+                  <input type="text" name="Name" placeholder="Full Name" className="full-width"/><br/>
+                  <input type="text" name="company" placeholder="Company Name" className="full-width"/><br/>
+                  <input type="email" name="_replyto" placeholder="Work Email" className="full-width"/><br/>
+                
+                  <input type="submit" className="btn pull-right" value="Send"/>
+                
+                  <input type="hidden" name="Pipe Size: " value={this.state.pipeSize} className="hidden" /><br/>
+                  <input type="hidden" name="Hose Size: " value={this.state.hoseSize} className="hidden" /><br/>
+                  <input type="hidden" name="Flange: " value={this.state.flange} className="hidden" /><br/>
+                  <input type="hidden" name="Splash Plate: " value={this.state.plate} className="hidden" /><br/>
+                  <input type="hidden" name="Hose: " value={this.state.addHose} className="hidden" /><br/>
+                  <input type="hidden" name="Collet: " value={this.state.addCollet} className="hidden" /><br/>
+                  <input type="hidden" name="Roller: " value={this.state.addRoller} className="hidden" /><br/>
+                  <input type="hidden" name="Flange Mount: " value={this.state.addFlangeMount} className="hidden" /><br/>
+                  <input type="hidden" name="Strap Mount: " value={this.state.addStrapMount} className="hidden" /><br/>
+                  <input type="hidden" name="Nozzle: " value={this.state.addNozzle} className="hidden" /><br/>
+                </form>
+              )}
+              
+            </div>
+          </div>
+        )}
       
       </div>
     );
