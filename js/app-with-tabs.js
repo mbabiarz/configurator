@@ -6,12 +6,12 @@ const App = React.createClass({
       hoseSize: '4/4',
       flange: true,
       plate: true,
-      addHose: 'no',
-      addCollet: 'no',
+      addHose: 'false',
+      addCollet: 'false',
       addRoller: false,
       addFlangeMount: false,
       addStrapMount: false,
-      addNozzle: 'no',
+      addNozzle: 'false',
       notes: '',
       done: false,
       tab: 1
@@ -212,14 +212,14 @@ const App = React.createClass({
             <div className="tab-row">
               <h2>Parameters</h2>
                 <strong>Pipe Size:</strong> {this.state.pipeSize}<br/>
-                Hose Size: {this.state.hoseSize}<br/>{this.state.flange ? 'Flange: yes' : 'Flange: no'}<br/>
-                {!this.state.flange && this.state.plate ? 'Plate: yes' : 'Plate: no'}<br/>
+                Hose Size: {this.state.hoseSize}<br/>{this.state.flange ? 'Flange: true' : 'Flange: false'}<br/>
+                {!this.state.flange && this.state.plate ? 'Plate: true' : 'Plate: false'}<br/>
                 <h2>Optional Items</h2>
                 Add Hose: {this.state.addHose}<br/>
                 Add Collet: {this.state.addCollet}<br/>
-                Add Roller: {this.state.addRoller ? 'PRO 174-46' : 'no'}<br/>
-                Add Flange Mount: {this.state.addFlangeMount ? 'BOP 010-4-8' : 'no'}<br/>
-                Add Strap Mount: {this.state.addStrapMount ? 'BOP 050' : 'no'}<br/>
+                Add Roller: {this.state.addRoller ? 'PRO 174-46' : 'false'}<br/>
+                Add Flange Mount: {this.state.addFlangeMount ? 'BOP 010-4-8' : 'false'}<br/>
+                Add Strap Mount: {this.state.addStrapMount ? 'BOP 050' : 'false'}<br/>
                 Add Nozzle: {this.state.addNozzle}<br/>
                 Notes: {this.state.notes}
             </div>
@@ -230,25 +230,34 @@ const App = React.createClass({
               {!this.state.done && <input type="button" value="Get a Quote" onClick={this.updateRadio.bind(null, {done: true})} className="pull-right btn" />}
 
               {this.state.done && (
-                <form action="https://formspree.io/margaret.babiarz@stoneagetools.com"
-        method="POST" className="send-form">
-                  <input type="text" name="Name" placeholder="Full Name" className="full-width"/><br/>
-                  <input type="text" name="company" placeholder="Company Name" className="full-width"/><br/>
-                  <input type="email" name="_replyto" placeholder="Work Email" className="full-width"/><br/>
-                
-                  <input type="submit" className="btn pull-right" value="Send"/>
-                
-                  <input type="hidden" name="Pipe Size: " value={this.state.pipeSize} className="hidden" /><br/>
-                  <input type="hidden" name="Hose Size: " value={this.state.hoseSize} className="hidden" /><br/>
-                  <input type="hidden" name="Flange: " value={this.state.flange} className="hidden" /><br/>
-                  <input type="hidden" name="Splash Plate: " value={this.state.plate} className="hidden" /><br/>
-                  <input type="hidden" name="Hose: " value={this.state.addHose} className="hidden" /><br/>
-                  <input type="hidden" name="Collet: " value={this.state.addCollet} className="hidden" /><br/>
-                  <input type="hidden" name="Roller: " value={this.state.addRoller} className="hidden" /><br/>
-                  <input type="hidden" name="Flange Mount: " value={this.state.addFlangeMount} className="hidden" /><br/>
-                  <input type="hidden" name="Strap Mount: " value={this.state.addStrapMount} className="hidden" /><br/>
-                  <input type="hidden" name="Nozzle: " value={this.state.addNozzle} className="hidden" /><br/>
-                </form>
+                <div>
+                  <div className="tab-row">
+                    <h2>Customer Contact Information</h2>
+                  </div>
+                  <form action="https://formspree.io/margaret.babiarz@stoneagetools.com"
+          method="POST" className="send-form">
+                    <input type="text" name="Name: " placeholder="Your Name" className="wide pull-right"/><br/>
+                    <input type="text" name="Company: " placeholder="Company Name" className="wide pull-right"/><br/>
+                    <input type="email" name="Email: " placeholder="Email Address" className="wide pull-right"/><br/>
+                    <input type="text" name="Phone: " placeholder="Phone Number" className="wide pull-right"/><br/>
+
+                    <input type="submit" className="btn pull-right" value="Send"/><br className="clearfix" />
+
+                    <input type="hidden" name="_subject" value="Navigator Quote Request" />
+                    <input type="hidden" name="Pipe Size: " value={this.state.pipeSize} />
+                    <input type="hidden" name="Hose Size: " value={this.state.hoseSize} />
+                    <input type="hidden" name="Flange: " value={this.state.flange} />
+                    <input type="hidden" name="Splash Plate: " value={this.state.plate} className="hidden" />
+                    <input type="hidden" name="Hose: " value={this.state.addHose} className="hidden" />
+                    <input type="hidden" name="Collet: " value={this.state.addCollet} className="hidden" />
+                    <input type="hidden" name="Roller: " value={this.state.addRoller} className="hidden" />
+                    <input type="hidden" name="Flange Mount: " value={this.state.addFlangeMount} className="hidden" />
+                    <input type="hidden" name="Strap Mount: " value={this.state.addStrapMount} className="hidden" />
+                    <input type="hidden" name="Nozzle: " value={this.state.addNozzle} className="hidden" />
+                    <input type="hidden" name="Notes: " value={this.state.notes} className="hidden" />
+                    <input type="hidden" name="_next" value="http://www.stoneagetools.com/email-thanks.html" />
+                  </form>
+                </div>
               )}
               
             </div>
