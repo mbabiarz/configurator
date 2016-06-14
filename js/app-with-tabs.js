@@ -241,7 +241,7 @@ const App = React.createClass({
                     <input type="email" name="Email: " placeholder="Email Address" className="wide pull-right"/><br/>
                     <input type="text" name="Phone: " placeholder="Phone Number" className="wide pull-right"/><br/>
 
-                    <input type="submit" className="btn pull-right" value="Send"/><br className="clearfix" />
+                    <input type="submit" className="btn wide pull-right" value="Send to Sales"/><br className="clearfix" />
 
                     <input type="hidden" name="_subject" value="Navigator Quote Request" />
                     <input type="hidden" name="Pipe Size: " value={this.state.pipeSize} />

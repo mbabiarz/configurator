@@ -70,6 +70,9 @@
 #appContent label.even {
   width: 80px;
 }
+#appContent label.even-120 {
+  width: 120px;
+}
 #appContent .msg-box {
   width:100%;
   resize:none;
@@ -85,12 +88,5 @@
 }
 #appContent .send-form .wide {
   width: 97%;
-  margin-bottom: 2px;
-}
-#appContent .send-form .hidden {
-/*
-  display: inline;
-  width: 0;
-  height: 0;
-*/
+  margin-bottom: 5px;
 }
