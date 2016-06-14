@@ -60,7 +60,8 @@
 #appContent .btn-gray {
   background-color: #999;
 }
-#appContent .btn-gray:hover {
+#appContent .btn-gray:hover,
+#appContent .tab-nav-active {
   background-color: #666;
 }
 #appContent input, select {

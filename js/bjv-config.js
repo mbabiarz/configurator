@@ -52,9 +52,18 @@ const App = React.createClass({
     this.setState({ notes: e.target.value });
   },
   
+  getActiveClass: function (tab) {
+    var className = 'tab-nav';
+    console.log('getActiveClass', tab);
+    if (this.state.tab === tab) {
+      return className +' tab-nav-active';
+    }
+    return className;
+  },
+  
   render() {
     var styleInline = { display:'inline' };
-    var marginLeft21 = { marginLeft:'21px' }; 
+    var marginLeft21 = { marginLeft:'21px' };
     var tab = this.state.tab;
     
     return (
@@ -63,11 +72,11 @@ const App = React.createClass({
         <h1>Configure your equipment</h1>
         
         {/* TAB NAV */}
-        <span onClick={this.changeTab.bind(null, 1)} className="tab-nav tab-nav-active">1. Parameters</span>
-        <span onClick={this.changeTab.bind(null, 2)} className="tab-nav">2. Head Selection</span>
-        <span onClick={this.changeTab.bind(null, 3)} className="tab-nav">3. Options</span>
-        <span onClick={this.changeTab.bind(null, 4)} className="tab-nav">4. Notes</span>
-        <span onClick={this.changeTab.bind(null, 5)} className="tab-nav">5. Summary</span>
+        <span onClick={this.changeTab.bind(null, 1)} className={this.getActiveClass(1)}>1. Parameters</span>
+        <span onClick={this.changeTab.bind(null, 2)} className={this.getActiveClass(2)}>2. Head Selection</span>
+        <span onClick={this.changeTab.bind(null, 3)} className={this.getActiveClass(3)}>3. Options</span>
+        <span onClick={this.changeTab.bind(null, 4)} className={this.getActiveClass(4)}>4. Notes</span>
+        <span onClick={this.changeTab.bind(null, 5)} className={this.getActiveClass(5)}>5. Summary</span>
 
         {/* TAB 1 CONTENT */}
         {tab === 1 && (
@@ -78,9 +87,10 @@ const App = React.createClass({
                 <input
                   type="text"
                   name="pressure"
-                  value={this.state.value}           onChange={this.setPressure}
+                  value={this.state.pressure ? this.state.pressure : ''}           onChange={this.setPressure}
                 />
               <small className="grey">2000 - 40000 psi</small>
+              {isNaN(this.state.pressure) && (<p style={{color:'red',margin:0}}>Pressure must be a number</p>)}
             </div>     
             {/* FLOW */}
             <div className="tab-row">
