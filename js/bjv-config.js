@@ -20,6 +20,14 @@ const App = React.createClass({
     this.setState({tab: tab});
   },
   
+  getActiveClass: function (tab) {
+    var className = 'tab-nav';
+    if (this.state.tab === tab) {
+      return className +' tab-nav-active';
+    }
+    return className;
+  },
+  
   updateRadio: function (nextState) {
     this.setState(nextState);
   },
@@ -40,30 +48,38 @@ const App = React.createClass({
     this.setState({ pressure: e.target.value });
   },
   
+  setFlow: function(e) {
+    this.setState({ flow: e.target.value });
+  },
+  
   setPipeSize: function(e) {
     this.setState({ pipeSize: e.target.value });
+  },
+  
+  setRotation: function(e) {
+    this.setState({ rotation: e.target.value });
+  },
+  
+  setInlet: function(e) {
+    this.setState({ inlet: e.target.value });
   },
   
   setHoseSize: function(e) {
     this.setState({ hoseSize: e.target.value });
   },
   
-  setNotes: function(e) {
-    this.setState({ notes: e.target.value });
+  setHoseLength: function(e) {
+    this.setState({ hoseLength: e.target.value });
   },
   
-  getActiveClass: function (tab) {
-    var className = 'tab-nav';
-    console.log('getActiveClass', tab);
-    if (this.state.tab === tab) {
-      return className +' tab-nav-active';
-    }
-    return className;
+  setNotes: function(e) {
+    this.setState({ notes: e.target.value });
   },
   
   render() {
     var styleInline = { display:'inline' };
     var marginLeft21 = { marginLeft:'21px' };
+    var errorMsg = { color:'#9e6033', margin:0, fontSize:'12px', fontStyle:'italic' };
     var tab = this.state.tab;
     
     return (
@@ -90,7 +106,7 @@ const App = React.createClass({
                   value={this.state.pressure ? this.state.pressure : ''}           onChange={this.setPressure}
                 />
               <small className="grey">2000 - 40000 psi</small>
-              {isNaN(this.state.pressure) && (<p style={{color:'red',margin:0}}>Pressure must be a number</p>)}
+              {isNaN(this.state.pressure) && (<p style={errorMsg}>Pressure should be a number between 2000-40000 with no commas.</p>)}
             </div>     
             {/* FLOW */}
             <div className="tab-row">
@@ -98,9 +114,10 @@ const App = React.createClass({
                 <input
                   type="text"
                   name="flow"
-                  value={this.state.value}           onChange={this.setPipeSize}
+                  value={this.state.flow ? this.state.flow : ''}           onChange={this.setFlow}
                 />
               <small className="grey">3 - 200 gpm</small>
+              {isNaN(this.state.flow) && (<p style={errorMsg}>Flow should be a number between 3-200 with no commas.</p>)}
             </div>
             {/* PIPE SIZE */}
             <div className="tab-row bg-lt-grey">
@@ -108,24 +125,23 @@ const App = React.createClass({
                 <input
                   type="text"
                   name="pipeSize"
-                  value={this.state.value}           onChange={this.setPipeSize}
+                  value={this.state.pipeSize ? this.state.pipeSize : ''}           onChange={this.setPipeSize}
                 />
               <small className="grey">6 - 72 in.</small>
+              {isNaN(this.state.pipeSize) && (<p style={errorMsg}>Pipe size should be a number between 6-72 with no commas. If working on larger diameter pipe, please include details in the Notes section.</p>)}
             </div>
             {/* ROTATION */}
             <div className="tab-row">
               <label className="even-120">Rotation Speed</label>
-                <input
-                  type="text"
-                  name="rotation"
-                  value={this.state.value}           onChange={this.setPipeSize}
-                />
-              <small className="grey">10 - 300 rpm</small>
+                <select id="rotation" defaultValue={this.state.rotation} onChange={this.setRotation}>
+                <option value='Slow'>Slow</option>
+                <option value='Fast'>Fast</option>
+                </select>
             </div> 
             {/* INLET */}
             <div className="tab-row bg-lt-grey">
               <label className="even-120">Inlet Connection</label>
-              <select id="inlet" defaultValue={this.state.inlet} onChange={this.setPipeSize}>
+              <select id="inlet" defaultValue={this.state.inlet} onChange={this.setInlet}>
               <option value='1 NPT'>1 NPT</option>
               <option value='3/4 NPT'>3/4 NPT</option>
               <option value='M24'>M24</option>
@@ -161,9 +177,10 @@ const App = React.createClass({
                 <input
                   type="text"
                   name="hoseLength"
-                  value={this.state.value}           onChange={this.setPipeSize}
+                  value={this.state.hoseLength ? this.state.hoseLength : ''}           onChange={this.setHoseLength}
                 />
               <small className="grey">30 - 1000 ft</small>
+              {isNaN(this.state.hoseLength) && (<p style={errorMsg}>Hose length should be a number between 3-1000 with no commas.</p>)}
             </div> 
 
             <div className="prev-next">
@@ -250,8 +267,17 @@ const App = React.createClass({
             <div className="tab-row">
               <div className="col-sm-6">
                 <h2>Parameters</h2>
-                <strong>Pressure:</strong> {this.state.pressure}<br/>
-                Inlet: {this.state.inlet}<br/>{this.state.flange ? 'Flange: true' : 'Flange: false'}<br/>
+                Pressure: {this.state.pressure}<br/>
+                Flow: {this.state.flow}<br/>
+                Pipe Size: {this.state.pipeSize}<br/>
+                Rotation Speed: {this.state.rotation}<br/>
+                Inlet Connection: {this.state.inlet}<br/>
+                Hose Size: {this.state.hoseSize}<br/>
+                Hose Length: {this.state.hoseLength}<br/><hr/>
+                Swivel: <br/>
+                
+                
+                {this.state.flange ? 'Flange: true' : 'Flange: false'}<br/>
                 {!this.state.flange && this.state.plate ? 'Plate: true' : 'Plate: false'}
               </div>
               <div className="col-sm-6">
@@ -263,6 +289,7 @@ const App = React.createClass({
                 Add Strap Mount: {this.state.addStrapMount ? 'BOP 050' : 'false'}<br/>
                 Add Nozzle: {this.state.addNozzle}<br/>
                 Notes: {this.state.notes}
+          
               </div>
               <br className="clearfix"/>
             </div>

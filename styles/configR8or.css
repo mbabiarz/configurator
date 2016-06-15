@@ -31,19 +31,20 @@
   font-size: 12px;
   letter-spacing: .1px;
 }
-#appContent .tab-nav:active, #appContent .tab-nav:hover {
+#appContent .tab-nav-active {
   background-color: #ddd;
   color: #222;
   border-top: 3px solid #ddd;
   border-bottom: 0;
 }
+#appContent .tab-nav:hover {
+  background-color: #484848;
+  color: #fff;
+  border-bottom: 0;
+}
 #appContent .tab-content {
   padding: 10px;
   border: 1px solid #ddd;
-/*
-  border-radius: 3px;
-  border-top-left-radius: 0;
-*/
 }
 #appContent .tab-content .tab-row {
   padding: 10px;
@@ -60,8 +61,7 @@
 #appContent .btn-gray {
   background-color: #999;
 }
-#appContent .btn-gray:hover,
-#appContent .tab-nav-active {
+#appContent .btn-gray:hover {
   background-color: #666;
 }
 #appContent input, select {
