@@ -13,10 +13,14 @@ const App = React.createClass({
       backout: true,
       cSkid: false,
       cCage: false,
-      c6: false,
-      c8: false,
+      c6Wheel: false,
+      c8Wheel: false,
       ring: false,
       case: false,
+      kService: false,
+      kSeal: false,
+      kOverhaul: false,
+      kTool: false,
       notes: '',
       done: false,
       tab: 1
@@ -61,12 +65,10 @@ const App = React.createClass({
      else
         e.style.display = 'block';
   },
-  
-  // TODO: we can probably refactor to a single change handler for select options that change state
+
   updateValue: function(key) {
     var update = {};
     update[key] = this.refs[key].value;
-    // {pressure: value}
     this.setState(update);
   },
   
@@ -99,20 +101,31 @@ const App = React.createClass({
     var f = this.state.flow;
     var i = this.state.inlet;
     var r = this.state.rotation;
-    var swivels = ['BJV-P16-S', 'BJV-P16-F', 'BJV-P12-S', 'BJV-P12-F', 'BJV-M24-S', 'BJV-M24-F', 'BJV-MP12-S', 'BJV-MP12-S', 'BJV-MP12-F', 'BJV-H9-S', 'BJV-H9-F'];
+    
+    var swivels = ['BJV-P16-S', 'BJV-P16-F', 'BJV-P12-S', 'BJV-P12-F', 'BJV-M24-S', 'BJV-M24-F', 'BJV-MP12-S', 'BJV-MP12-F', 'BJV-H9-S', 'BJV-H9-F'];
     var p16logic = p >= 2000 && p <= 10000 && f >= 20 && f <= 200 && i === '1 NPT';
     var p12logic = p >= 2000 && p <= 15000 && f >= 12 && f <= 100 && i === '3/4 NPT';
+    var m24logic = p >= 2000 && p <= 22000 && f >= 12 && f <= 100 && i === 'M24';
+    var mp12logic = p >= 2000 && p <= 22000 && f >= 10 && f <= 60 && i === '3/4 MP';
+    var h9logic = p >= 20000 && p <= 40000 && f >= 3 && f <= 20 && i === '9/16 HP';
     if (p16logic && r === 'Slow') { return swivels[0]; }
     if (p16logic && r === 'Fast') { return swivels[1]; }
     if (p12logic && r === 'Slow') { return swivels[2]; }
     if (p12logic && r === 'Fast') { return swivels[3]; }
-    return <span style={{color:'red'}}>No swivel found for this configuration</span>;
+    if (m24logic && r === 'Slow') { return swivels[4]; }
+    if (m24logic && r === 'Fast') { return swivels[5]; }
+    if (mp12logic && r === 'Slow') { return swivels[6]; }
+    if (mp12logic && r === 'Fast') { return swivels[7]; }
+    if (h9logic && r === 'Slow') { return swivels[8]; }
+    if (h9logic && r === 'Fast') { return swivels[9]; }
+    
+    return <span style={{color:'#c45846',fontSize:'12px',fontStyle:'italic'}}>No swivel found for this configuration</span>;
   },
   
   render() {
     var styleInline = { display:'inline' };
     var marginLeft21 = { marginLeft:'21px' };
-    var errorMsg = { color:'#9e6033', margin:0, fontSize:'12px', fontStyle:'italic' };
+    var errorMsg = { color:'#c45846', margin:0, fontSize:'12px', fontStyle:'italic' };
     var infoMsg = { color:'#888', margin:'10px', fontSize:'12px', fontStyle:'italic', display:'none' };
     var tab = this.state.tab;
     
@@ -150,7 +163,8 @@ const App = React.createClass({
                   ref="flow"
                   type="text"
                   name="flow"
-                  value={this.state.flow ? this.state.flow : ''}           onChange={this.updateValue.bind(null, 'flow')}
+                  value={this.state.flow ? this.state.flow : ''} 
+                  onChange={this.updateValue.bind(null, 'flow')}
                 />
               <small className="grey">3 - 200 gpm</small>
               {isNaN(this.state.flow) && (<p style={errorMsg}>Flow should be a number between 3-200 with no commas.</p>)}
@@ -161,7 +175,7 @@ const App = React.createClass({
                 <input
                   type="text"
                   name="pipeSize"
-                  value={this.state.pipeSize ? this.state.pipeSize : ''}           onChange={this.setPipeSize}
+                  value={this.state.pipeSize ? this.state.pipeSize : ''}           onChange={this.updateValue.bind(null, 'pipeSize')}
                 />
               <small className="grey">6 - 72 in.</small>
               {isNaN(this.state.pipeSize) && (<p style={errorMsg}>Pipe size should be a number between 6-72 with no commas. If working on larger diameter pipe, please include details in the Notes section.</p>)}
@@ -188,7 +202,7 @@ const App = React.createClass({
             {/* HOSE SIZE */}
             <div className="tab-row">
               <label htmlFor="hoseSize" className="even-120"> Hose Size</label>
-              <select id="hoseSize" defaultValue={this.state.hoseSize} onChange={this.setHoseSize}>
+              <select id="hoseSize" defaultValue={this.state.hoseSize} onChange={this.updateValue.bind(null, 'hoseSize')}>
               <option value="4 mm">4 mm</option>
               <option value="3/16 in.">3/16 in.</option>
               <option value="5 mm">5 mm</option>
@@ -213,7 +227,7 @@ const App = React.createClass({
                 <input
                   type="text"
                   name="hoseLength"
-                  value={this.state.hoseLength ? this.state.hoseLength : ''}           onChange={this.setHoseLength}
+                  value={this.state.hoseLength ? this.state.hoseLength : ''}           onChange={this.updateValue.bind(null, 'hoseLength')}
                 />
               <small className="grey">30 - 1000 ft</small>
               {isNaN(this.state.hoseLength) && (<p style={errorMsg}>Hose length should be a number between 3-1000 with no commas.</p>)}
@@ -287,15 +301,20 @@ const App = React.createClass({
               <input id="cCage" defaultChecked={this.state.cCage} type="checkbox" onChange={this.toggleValue}/>
               <label htmlFor="cCage"> Cage Style</label>
               
-              <input id="c6" defaultChecked={this.state.cCage} type="checkbox" onChange={this.toggleValue}/>
-              <label htmlFor="c6"> 6-Wheel</label>
+              <input id="c6Wheel" defaultChecked={this.state.c6Wheel} type="checkbox" onChange={this.toggleValue}/>
+              <label htmlFor="c6Wheel"> 6-Wheel</label>
               
-              <input id="c8" defaultChecked={this.state.cCage} type="checkbox" onChange={this.toggleValue}/>
-              <label htmlFor="c8"> 8-Wheel</label>
+              <input id="c8Wheel" defaultChecked={this.state.c8Wheel} type="checkbox" onChange={this.toggleValue}/>
+              <label htmlFor="c8Wheel"> 8-Wheel</label>
               <div id="cTip" className="media" style={infoMsg}>
-                <p>A centralizer helps to protect the tool as it passes through the pipe and balances jet standoff distance for more consistent cleaning.</p>
-                <p>In cases where pipe size is more than 1.5 times the diameter of the tool, a centralizer is an important safety device, preventing the tool from turning around and thrusting backwards out of the pipe.</p>
-                <p><a href="http://www.stoneagetools.com/bjv-centralizers" target="_blank">See our centralizer product page for complete info and specs.</a></p>
+                <div className="media-body">
+                  <p>A centralizer helps to protect the tool as it passes through the pipe and balances jet standoff distance for more consistent cleaning.</p>
+                  <p>In cases where pipe size is more than 1.5 times the diameter of the tool, a centralizer is an important safety device, preventing the tool from turning around and thrusting backwards out of the pipe.</p>
+                  <p><a href="http://www.stoneagetools.com/bjv-centralizers" target="_blank">See our centralizer product page for details.</a></p>
+                </div>
+                <span className="media-right">
+                  <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-centralizer-02.jpg" />
+                </span>
               </div> 
             </div>
             
@@ -307,9 +326,9 @@ const App = React.createClass({
                 <div className="media-body">
                   <p>A pulling ring can be utilized to pull a tool through the pipe in difficult cleaning applications. Pulling rings are available for 6-port and 8-port BJV heads.</p>
                 </div>
-                <span className="media-right">
+                {/*<span className="media-right">
                     <img src="http://www.stoneagetools.com/assets/img/product/thumb-backout-305.jpg" alt="..." />
-                </span>
+                </span>*/}
               </div>
             </div>
                     
@@ -319,11 +338,11 @@ const App = React.createClass({
               <label htmlFor="case"> Add Carrying Case</label> <button className="pull-right" onClick={this.toggleVisibility.bind(null, 'caseTip')}>?</button>
               <div id="caseTip" className="media" style={infoMsg}>
                 <div className="media-body">
-                  <p>A pulling ring can be utilized to pull a tool through the pipe in difficult cleaning applications. Pulling rings are available for 6-port and 8-port BJV heads.</p>
+                  <p>A Pelican&trade; protection/carrying case with custom cut foam insert is available for BJV tools.</p>
                 </div>
-                <span className="media-right">
+                {/*<span className="media-right">
                     <img src="http://www.stoneagetools.com/assets/img/product/thumb-backout-305.jpg" alt="..." />
-                </span>
+                </span>*/}
               </div>
             </div>
                     
@@ -387,16 +406,15 @@ const App = React.createClass({
                 Hose Size: {this.state.hoseSize}<br/>
                 Hose Length: {this.state.hoseLength}<br/><hr/>
                 Swivel: {this.getSwivel()}<br/>
-                Head: <span style={{color:'red'}}>This should state head type for jetting (</span><br/>
+                Head: <span style={{color:'#c45846',fontSize:'12px',fontStyle:'italic'}}>This should state head type for jetting </span><br/>
               </div>
               <div className="col-sm-6">
                 <h2>Optional Items</h2>
-                Backout Preventer: {this.state.backout}<br/>
-                Centralizer: <span style={{color:'red'}}>This should state which centralizer</span><br/>
+                Backout Preventer: {this.state.backout ? 'true' : 'false'}<br/>
+                Centralizer: {this.state.cSkid ? 'BJ 070' : ''} {this.state.cCage ? 'Cage' : ''} {this.state.c6Wheel ? 'BJ 286' : ''}{this.state.c8Wheel ? 'BJ 288' : ''}{!this.state.cSkid && !this.state.cCage && !this.state.c6Wheel && !this.state.c8Wheel && 'false'}<br/>
                 Pulling ring: {this.state.ring ? 'HC 090' : 'false'}<br/>
                 Carrying Case: {this.state.addFlangeMount ? 'BJ 080' : 'false'}<br/>
-                Strap Mount: {this.state.addStrapMount ? 'BOP 050' : 'false'}<br/>
-                Maintenance Kit: <span style={{color:'red'}}>This should state which kit(s)</span><br/>
+                Maintenance Kit: {this.state.kService ? 'BJ 600' : ''} {this.state.kSeal ? 'BJ 602' : ''} {this.state.kOverhaul ? 'BJ 610' : ''} {this.state.kTool ? 'BJ 612' : ''}{!this.state.kService && !this.state.kSeal && !this.state.kOverhaul && !this.state.kTool && 'false'}<br/>
                 Notes: {this.state.notes}
           
               </div>
