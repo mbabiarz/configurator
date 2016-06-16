@@ -10,6 +10,13 @@ const App = React.createClass({
       hoseSize: '4 mm',
       hoseLength: 0,
       headType: '',
+      backout: true,
+      cSkid: false,
+      cCage: false,
+      c6: false,
+      c8: false,
+      ring: false,
+      case: false,
       notes: '',
       done: false,
       tab: 1
@@ -32,15 +39,27 @@ const App = React.createClass({
     this.setState(nextState);
   },
   
-  handleCheck: function(e) {
-    this.setState({isChecked: !this.state.isChecked});
-  },
-  
   toggleValue: function (event) {
     var val = event.currentTarget;
     var newVal = {};
     newVal[val.id] = val.checked;
     this.setState(newVal);
+  },
+  
+  handleChecks: function (event) {
+    var checkbox = event.currentTarget;
+    console.log(checkbox);
+    var newVal = {};
+    newVal[val.id] = val.checked;
+    this.setState(newVal);
+  },
+  
+  toggleVisibility: function (id) {
+     var e = document.getElementById(id);
+     if(e.style.display == 'block')
+        e.style.display = 'none';
+     else
+        e.style.display = 'block';
   },
   
   // TODO: we can probably refactor to a single change handler for select options that change state
@@ -80,6 +99,7 @@ const App = React.createClass({
     var styleInline = { display:'inline' };
     var marginLeft21 = { marginLeft:'21px' };
     var errorMsg = { color:'#9e6033', margin:0, fontSize:'12px', fontStyle:'italic' };
+    var infoMsg = { color:'#888', margin:'10px', fontSize:'12px', fontStyle:'italic', display:'none' };
     var tab = this.state.tab;
     
     return (
@@ -198,7 +218,7 @@ const App = React.createClass({
             <div className="tab-row bg-lt-grey">
               <label htmlFor="headType" className="even">Head Type:</label>
               <select id="headType" defaultValue={this.state.headType} onChange={this.setHoseSize}>
-                {this.state.pressure >= 2000 && this.state.pressure <= 10000 && this.state.inlet === '1 NPT' && <option>Option A</option>}
+                {this.state.pressure <= 10000 && this.state.inlet === '1 NPT' && <option>Option A</option>}
           
                 {/* Throws key warning */}
                 {this.state.hoseSize === '8 mm' && [
@@ -226,15 +246,91 @@ const App = React.createClass({
         {/* TAB 3 CONTENT */}
         {tab === 3 && (
           <div className="tab-content">
-            <div className="tab-row">
-              <label>Add instructions or other info:</label>
-                <textarea
-                  type="text"
-                  name="notes"
-                  value={this.state.value}           onChange={this.setNotes}
-                  className="msg-box"
-                />
+            {/* ADD BACKOUT */}
+            <div className="tab-row bg-lt-grey">
+              <input id="backout" defaultChecked={this.state.backout} type="checkbox" onChange={this.toggleValue}/>
+              <label htmlFor="backout"> Add Backout Preventer</label> <button className="pull-right" onClick={this.toggleVisibility.bind(null, 'backoutTip')}>?</button>
+              <div id="backoutTip" className="media" style={infoMsg}>
+                <div className="media-body">
+                  <p>Backout preventers increase operator safety by keeping the tool from backing out of the pipe.</p>
+                  <p>Options are available including fixtures for small diameter pipes, pipes with various flange bolt circle diameters, and adapters for pipes with no-flange entry.</p>
+                  <p>The appropriate backout preventer will be selected based on your parameters. Include additional instructions in Notes.</p>
+                </div>
+                <span className="media-right">
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-backout-305.jpg" alt="..." />
+                </span>
+              </div>
             </div>
+          
+            {/* ADD CENTRALIZER */}
+            <div className="tab-row">
+              Add Centralizer <button className="pull-right" onClick={this.toggleVisibility.bind(null, 'cTip')}>?</button>
+              <input id="cSkid" defaultChecked={this.state.cSkid} type="checkbox" onChange={this.toggleValue}/>
+              <label htmlFor="cSkid"> Skid Style</label> 
+              
+              <input id="cCage" defaultChecked={this.state.cCage} type="checkbox" onChange={this.toggleValue}/>
+              <label htmlFor="cCage"> Cage Style</label>
+              
+              <input id="c6" defaultChecked={this.state.cCage} type="checkbox" onChange={this.toggleValue}/>
+              <label htmlFor="c6"> 6-Wheel</label>
+              
+              <input id="c8" defaultChecked={this.state.cCage} type="checkbox" onChange={this.toggleValue}/>
+              <label htmlFor="c8"> 8-Wheel</label>
+              <div id="cTip" className="media" style={infoMsg}>
+                <p>A centralizer helps to protect the tool as it passes through the pipe and balances jet standoff distance for more consistent cleaning.</p>
+                <p>In cases where pipe size is more than 1.5 times the diameter of the tool, a centralizer is an important safety device, preventing the tool from turning around and thrusting backwards out of the pipe.</p>
+                <p><a href="http://www.stoneagetools.com/bjv-centralizers" target="_blank">See our centralizer product page for complete info and specs.</a></p>
+              </div> 
+            </div>
+            
+            {/* ADD PULLING RING */}
+            <div className="tab-row bg-lt-grey">
+              <input id="ring" defaultChecked={this.state.ring} type="checkbox" onChange={this.toggleValue}/>
+              <label htmlFor="ring"> Add Pulling Ring</label> <button className="pull-right" onClick={this.toggleVisibility.bind(null, 'ringTip')}>?</button>
+              <div id="ringTip" className="media" style={infoMsg}>
+                <div className="media-body">
+                  <p>A pulling ring can be utilized to pull a tool through the pipe in difficult cleaning applications. Pulling rings are available for 6-port and 8-port BJV heads.</p>
+                </div>
+                <span className="media-right">
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-backout-305.jpg" alt="..." />
+                </span>
+              </div>
+            </div>
+                    
+            {/* ADD CASE */}
+            <div className="tab-row">
+              <input id="ring" defaultChecked={this.state.case} type="checkbox" onChange={this.toggleValue}/>
+              <label htmlFor="case"> Add Carrying Case</label> <button className="pull-right" onClick={this.toggleVisibility.bind(null, 'caseTip')}>?</button>
+              <div id="caseTip" className="media" style={infoMsg}>
+                <div className="media-body">
+                  <p>A pulling ring can be utilized to pull a tool through the pipe in difficult cleaning applications. Pulling rings are available for 6-port and 8-port BJV heads.</p>
+                </div>
+                <span className="media-right">
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-backout-305.jpg" alt="..." />
+                </span>
+              </div>
+            </div>
+                    
+            {/* ADD MAINT KIT */}
+            <div className="tab-row bg-lt-grey">
+              Add Maintenance Kit <button className="pull-right" onClick={this.toggleVisibility.bind(null, 'maintTip')}>?</button>
+              <input id="cSkid" defaultChecked={this.state.cSkid} type="checkbox" onChange={this.toggleValue}/>
+              <label htmlFor="cSkid"> Service Kit</label> 
+              
+              <input id="cCage" defaultChecked={this.state.cCage} type="checkbox" onChange={this.toggleValue}/>
+              <label htmlFor="cCage"> Seal Kit</label>
+              
+              <input id="c6" defaultChecked={this.state.cCage} type="checkbox" onChange={this.toggleValue}/>
+              <label htmlFor="c6"> Overhaul Kit</label>
+              
+              <input id="c8" defaultChecked={this.state.cCage} type="checkbox" onChange={this.toggleValue}/>
+              <label htmlFor="c8"> Tool Kit</label>
+              <div id="maintTip" className="media" style={infoMsg}>
+                <p>Maintenance kits should be listed somewhere on the website</p>
+                <p><a href="#" target="_blank">Where are they listed?</a></p>
+              </div> 
+            </div>
+          
             <div className="prev-next">
               <button onClick={this.changeTab.bind(null, 2)} className="pull-left btn btn-gray">Previous</button>
               <button onClick={this.changeTab.bind(null, 4)} className="pull-right btn btn-gray">Next: Notes</button>
@@ -250,7 +346,7 @@ const App = React.createClass({
                 <textarea
                   type="text"
                   name="notes"
-                  value={this.state.value}           onChange={this.setNotes}
+                  value={this.state.notes}           onChange={this.setNotes}
                   className="msg-box"
                 />
             </div>
@@ -274,20 +370,17 @@ const App = React.createClass({
                 Inlet Connection: {this.state.inlet}<br/>
                 Hose Size: {this.state.hoseSize}<br/>
                 Hose Length: {this.state.hoseLength}<br/><hr/>
-                Swivel: <br/>
-                
-                
-                {this.state.flange ? 'Flange: true' : 'Flange: false'}<br/>
-                {!this.state.flange && this.state.plate ? 'Plate: true' : 'Plate: false'}
+                Swivel: <span style={{color:'red'}}>This should state model</span><br/>
+                Head: <span style={{color:'red'}}>This should state head type for jetting</span><br/>
               </div>
               <div className="col-sm-6">
                 <h2>Optional Items</h2>
-                Add Hose: {this.state.addHose}<br/>
-                Add Collet: {this.state.addCollet}<br/>
-                Add Roller: {this.state.addRoller ? 'PRO 174-46' : 'false'}<br/>
-                Add Flange Mount: {this.state.addFlangeMount ? 'BOP 010-4-8' : 'false'}<br/>
-                Add Strap Mount: {this.state.addStrapMount ? 'BOP 050' : 'false'}<br/>
-                Add Nozzle: {this.state.addNozzle}<br/>
+                Backout Preventer: {this.state.backout}<br/>
+                Centralizer: <span style={{color:'red'}}>This should state which centralizer</span><br/>
+                Pulling ring: {this.state.ring ? 'HC 090' : 'false'}<br/>
+                Carrying Case: {this.state.addFlangeMount ? 'BJ 080' : 'false'}<br/>
+                Strap Mount: {this.state.addStrapMount ? 'BOP 050' : 'false'}<br/>
+                Maintenance Kit: <span style={{color:'red'}}>This should state which kit(s)</span><br/>
                 Notes: {this.state.notes}
           
               </div>
