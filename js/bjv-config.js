@@ -4,7 +4,7 @@ const App = React.createClass({
       pressure: 0,
       flow: 0,
       pipeSize: 0,
-      rotation: 0,
+      rotation: 'Slow',
       inlet: '1 NPT',
       swivel: '',
       hoseSize: '4 mm',
@@ -63,12 +63,11 @@ const App = React.createClass({
   },
   
   // TODO: we can probably refactor to a single change handler for select options that change state
-  setPressure: function(e) {
-    this.setState({ pressure: e.target.value });
-  },
-  
-  setFlow: function(e) {
-    this.setState({ flow: e.target.value });
+  updateValue: function(key) {
+    var update = {};
+    update[key] = this.refs[key].value;
+    // {pressure: value}
+    this.setState(update);
   },
   
   setPipeSize: function(e) {
@@ -93,6 +92,21 @@ const App = React.createClass({
   
   setNotes: function(e) {
     this.setState({ notes: e.target.value });
+  },
+  
+  getSwivel: function () {
+    var p = this.state.pressure;
+    var f = this.state.flow;
+    var i = this.state.inlet;
+    var r = this.state.rotation;
+    var swivels = ['BJV-P16-S', 'BJV-P16-F', 'BJV-P12-S', 'BJV-P12-F', 'BJV-M24-S', 'BJV-M24-F', 'BJV-MP12-S', 'BJV-MP12-S', 'BJV-MP12-F', 'BJV-H9-S', 'BJV-H9-F'];
+    var p16logic = p >= 2000 && p <= 10000 && f >= 20 && f <= 200 && i === '1 NPT';
+    var p12logic = p >= 2000 && p <= 15000 && f >= 12 && f <= 100 && i === '3/4 NPT';
+    if (p16logic && r === 'Slow') { return swivels[0]; }
+    if (p16logic && r === 'Fast') { return swivels[1]; }
+    if (p12logic && r === 'Slow') { return swivels[2]; }
+    if (p12logic && r === 'Fast') { return swivels[3]; }
+    return <span style={{color:'red'}}>No swivel found for this configuration</span>;
   },
   
   render() {
@@ -121,9 +135,10 @@ const App = React.createClass({
             <div className="tab-row bg-lt-grey">
               <label className="even-120">Operating Pressure</label>
                 <input
+                  ref="pressure"
                   type="text"
                   name="pressure"
-                  value={this.state.pressure ? this.state.pressure : ''}           onChange={this.setPressure}
+                  value={this.state.pressure ? this.state.pressure : ''}           onChange={this.updateValue.bind(null, 'pressure')}
                 />
               <small className="grey">2000 - 40000 psi</small>
               {isNaN(this.state.pressure) && (<p style={errorMsg}>Pressure should be a number between 2000-40000 with no commas.</p>)}
@@ -132,9 +147,10 @@ const App = React.createClass({
             <div className="tab-row">
               <label className="even-120">Operating Flow</label>
                 <input
+                  ref="flow"
                   type="text"
                   name="flow"
-                  value={this.state.flow ? this.state.flow : ''}           onChange={this.setFlow}
+                  value={this.state.flow ? this.state.flow : ''}           onChange={this.updateValue.bind(null, 'flow')}
                 />
               <small className="grey">3 - 200 gpm</small>
               {isNaN(this.state.flow) && (<p style={errorMsg}>Flow should be a number between 3-200 with no commas.</p>)}
@@ -370,8 +386,8 @@ const App = React.createClass({
                 Inlet Connection: {this.state.inlet}<br/>
                 Hose Size: {this.state.hoseSize}<br/>
                 Hose Length: {this.state.hoseLength}<br/><hr/>
-                Swivel: <span style={{color:'red'}}>This should state model</span><br/>
-                Head: <span style={{color:'red'}}>This should state head type for jetting</span><br/>
+                Swivel: {this.getSwivel()}<br/>
+                Head: <span style={{color:'red'}}>This should state head type for jetting (</span><br/>
               </div>
               <div className="col-sm-6">
                 <h2>Optional Items</h2>
