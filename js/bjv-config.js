@@ -122,15 +122,6 @@ const App = React.createClass({
     
     return <span style={{color:'#c45846',fontSize:'12px',fontStyle:'italic'}}>No swivel found for this configuration</span>;
   },
-                              
-  getDefaultPortSize: function (swivel) {
-    var ps = this.state.portSize;
-    if (swivel === 'BJV-P16-S' || swivel === 'BJV-P16-F') { ps = "P12" }
-    if (swivel === 'BJV-P12-S' || swivel === 'BJV-P12-F' || swivel === 'BJV-M24-S' || swivel === 'BJV-M24-F' || swivel === 'BJV-MP12-S' || swivel === 'BJV-MP12-F') { ps = "P4" }
-    if (swivel === 'BJV-H9-S' || swivel === 'BJV-H9-F') { ps = "S6" }
-  
-    return ps;
-  },
   
   render() {
     var styleInline = { display:'inline' };
@@ -138,7 +129,6 @@ const App = React.createClass({
     var infoMsg = { color:'#888', margin:'10px', fontSize:'12px', fontStyle:'italic', display:'none' };
     var tab = this.state.tab;
     var swivel = this.getSwivel();
-    var portSize = this.getDefaultPortSize(swivel);
     
     return (
       <div>
@@ -269,8 +259,8 @@ const App = React.createClass({
                   <option>6-Port</option>
                 </select>
                 <label htmlFor="portSize" className="even" style={{marginLeft:'40px'}}>Port Size: </label>
-                <select id="portSize" defaultValue={portSize} onChange={this.setPortSize}>
-                  <option>{this.getDefaultPortSize(swivel)}</option>
+                <select id="portSize" defaultValue={this.state.portSize} onChange={this.setPortSize}>
+                  <option>P12</option>
                   <option>P8</option>
                 </select> <button className="pull-right" onClick={this.toggleVisibility.bind(null, 'backoutTip')}>?</button>
                 <div id="backoutTip" className="media" style={infoMsg}>
