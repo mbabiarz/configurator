@@ -9,7 +9,8 @@ const App = React.createClass({
       swivel: '',
       hoseSize: '4 mm',
       hoseLength: 0,
-      headType: '',
+      headType: '6-Port',
+      portSize: '',
       backout: true,
       cSkid: false,
       cCage: false,
@@ -72,10 +73,6 @@ const App = React.createClass({
     this.setState(update);
   },
   
-  setPipeSize: function(e) {
-    this.setState({ pipeSize: e.target.value });
-  },
-  
   setRotation: function(e) {
     this.setState({ rotation: e.target.value });
   },
@@ -88,8 +85,12 @@ const App = React.createClass({
     this.setState({ hoseSize: e.target.value });
   },
   
-  setHoseLength: function(e) {
-    this.setState({ hoseLength: e.target.value });
+  setHeadType: function(e) {
+    this.setState({ headType: e.target.value });
+  },
+  
+  setPortSize: function(e) {
+    this.setState({ portSize: e.target.value });
   },
   
   setNotes: function(e) {
@@ -121,13 +122,23 @@ const App = React.createClass({
     
     return <span style={{color:'#c45846',fontSize:'12px',fontStyle:'italic'}}>No swivel found for this configuration</span>;
   },
+                              
+  getDefaultPortSize: function (swivel) {
+    var ps = this.state.portSize;
+    if (swivel === 'BJV-P16-S' || swivel === 'BJV-P16-F') { ps = "P12" }
+    if (swivel === 'BJV-P12-S' || swivel === 'BJV-P12-F' || swivel === 'BJV-M24-S' || swivel === 'BJV-M24-F' || swivel === 'BJV-MP12-S' || swivel === 'BJV-MP12-F') { ps = "P4" }
+    if (swivel === 'BJV-H9-S' || swivel === 'BJV-H9-F') { ps = "S6" }
+  
+    return ps;
+  },
   
   render() {
     var styleInline = { display:'inline' };
-    var marginLeft21 = { marginLeft:'21px' };
     var errorMsg = { color:'#c45846', margin:0, fontSize:'12px', fontStyle:'italic' };
     var infoMsg = { color:'#888', margin:'10px', fontSize:'12px', fontStyle:'italic', display:'none' };
     var tab = this.state.tab;
+    var swivel = this.getSwivel();
+    var portSize = this.getDefaultPortSize(swivel);
     
     return (
       <div>
@@ -202,7 +213,7 @@ const App = React.createClass({
             {/* HOSE SIZE */}
             <div className="tab-row">
               <label htmlFor="hoseSize" className="even-120"> Hose Size</label>
-              <select id="hoseSize" defaultValue={this.state.hoseSize} onChange={this.updateValue.bind(null, 'hoseSize')}>
+              <select id="hoseSize" defaultValue={this.state.hoseSize} onChange={this.setHoseSize}>
               <option value="4 mm">4 mm</option>
               <option value="3/16 in.">3/16 in.</option>
               <option value="5 mm">5 mm</option>
@@ -227,7 +238,7 @@ const App = React.createClass({
                 <input
                   type="text"
                   name="hoseLength"
-                  value={this.state.hoseLength ? this.state.hoseLength : ''}           onChange={this.updateValue.bind(null, 'hoseLength')}
+                  value={this.state.hoseLength ? this.state.hoseLength : ''}           onChange={this.setHoseLength}
                 />
               <small className="grey">30 - 1000 ft</small>
               {isNaN(this.state.hoseLength) && (<p style={errorMsg}>Hose length should be a number between 3-1000 with no commas.</p>)}
@@ -243,27 +254,78 @@ const App = React.createClass({
         {tab === 2 && (
           <div className="tab-content">
             {/* HEAD TYPE 
-            If [Pressure, Flow, Inlet, Rotation], set swivel=something. Then, based on swivel, display appropriate head choices. 
+            If [Pressure, Flow, Inlet, Rotation], set swivel=something. Then, based on swivel, display appropriate head choices. OR try fitting that login into getSwivel()!
             */}
+            <div className="tab-row">
+              Swivel: {swivel}
+              {/* NOT WORKING WITH MULTIPLE CONDITIONS...? Refactor: Try creating headType function that contains logic and using it here */}
+            </div>
             <div className="tab-row bg-lt-grey">
-              <label htmlFor="headType" className="even">Head Type:</label>
-              <select id="headType" defaultValue={this.state.headType} onChange={this.setHoseSize}>
-                {this.state.pressure <= 10000 && this.state.inlet === '1 NPT' && <option>Option A</option>}
           
-                {/* Throws key warning */}
-                {this.state.hoseSize === '8 mm' && [
-                  <option>Option B</option>,
-                  <option>Option B</option>
-                ]}
+              {swivel === 'BJV-P16-S' && (
+              <div>
+                
+                <label htmlFor="portSize" className="even">Head Type: </label>  <select id="headType" defaultValue={this.state.headType} onChange={this.setHeadType}>
+                  <option>6-Port</option>
+                </select>
+                <label htmlFor="portSize" className="even" style={{marginLeft:'40px'}}>Port Size: </label>
+                <select id="portSize" defaultValue={portSize} onChange={this.setPortSize}>
+                  <option>{this.getDefaultPortSize(swivel)}</option>
+                  <option>P8</option>
+                </select> <button className="pull-right" onClick={this.toggleVisibility.bind(null, 'backoutTip')}>?</button>
+                <div id="backoutTip" className="media" style={infoMsg}>
+                  <div className="media-body">
+                    <p>The standard head configuration for this swivel is:<br/> 6-port with extensions.</p>
+                    <p>Extensions will be selected for pipe size specified.</p>
+                    <p>Custom heads are available. Please specify additional instructions in the Notes section.</p>
+                  </div>
+                  <span className="media-right">
+                      <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                  </span>
+                </div>
           
-                {this.state.pressure < 2000 && (
+              </div>
+              )}
+          
+              {swivel === 'BJV-P12-S' && (
+              <div>
+                <label htmlFor="headType" className="even">Head Type: </label>
+                <select id="headType" defaultValue={this.state.headType} onChange={this.setHeadType}>
                   <optgroup>
-                    <option>Option C</option>
-                    <option>Option C</option>
+                    <option>6-Port</option>
+                    <option>7-Port</option>
                   </optgroup>
-                )}
+                </select>
+                <label htmlFor="portSize" className="even" style={{marginLeft:'21px'}}>Port Size: </label>
+                <select id="portSize" defaultValue={this.state.portSize} onChange={this.setPortSize}>
+                  <optgroup>
+                    <option>P12</option>
+                    <option>P8</option>
+                  </optgroup>
+                </select>
+              </div>
+              )}
 
-              </select>
+              {swivel === 'BJV-P-S' && (
+                <div>
+                <label htmlFor="headType" className="even">Head Type: </label>
+                <select id="headType" defaultValue={this.state.headType} onChange={this.setHeadType}>
+                  <optgroup>
+                    <option>6-Port</option>
+                    <option>7-Port</option>
+                  </optgroup>
+                </select>
+                <select id="portSize" defaultValue={this.state.portSize} onChange={this.setPortSize}>
+                  <optgroup>
+                    <option>P6</option>
+                    <option>P8</option>
+                  </optgroup>
+                </select>
+              </div>
+              )}
+
+              
+              
             </div>
             <div className="prev-next">
               <button onClick={this.changeTab.bind(null, 1)} className="pull-left btn btn-gray">Previous</button>
@@ -285,6 +347,7 @@ const App = React.createClass({
                   <p>Backout preventers increase operator safety by keeping the tool from backing out of the pipe.</p>
                   <p>Options are available including fixtures for small diameter pipes, pipes with various flange bolt circle diameters, and adapters for pipes with no-flange entry.</p>
                   <p>The appropriate backout preventer will be selected based on your parameters. Include additional instructions in Notes.</p>
+                  <p><a href="http://www.stoneagetools.com/backout-prevention" target="_blank">See our backout prevention product page for details.</a></p>
                 </div>
                 <span className="media-right">
                     <img src="http://www.stoneagetools.com/assets/img/product/thumb-backout-305.jpg" alt="..." />
@@ -406,7 +469,12 @@ const App = React.createClass({
                 Hose Size: {this.state.hoseSize}<br/>
                 Hose Length: {this.state.hoseLength}<br/><hr/>
                 Swivel: {this.getSwivel()}<br/>
-                Head: <span style={{color:'#c45846',fontSize:'12px',fontStyle:'italic'}}>This should state head type for jetting </span><br/>
+                {swivel.type !== 'span' && (
+                  <div>
+                Head Type: {this.state.headType}<br/>
+                Port Size: {this.state.portSize}
+                  </div>
+                )}
               </div>
               <div className="col-sm-6">
                 <h2>Optional Items</h2>
