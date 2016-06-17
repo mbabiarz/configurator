@@ -9,8 +9,7 @@ const App = React.createClass({
       swivel: '',
       hoseSize: '4 mm',
       hoseLength: 0,
-      headType: '6-Port',
-      portSize: '',
+      headType: '',
       backout: true,
       cSkid: false,
       cCage: false,
@@ -120,7 +119,7 @@ const App = React.createClass({
     if (h9logic && r === 'Slow') { return swivels[8]; }
     if (h9logic && r === 'Fast') { return swivels[9]; }
     
-    return <span style={{color:'#c45846',fontSize:'12px',fontStyle:'italic'}}>No swivel found for this configuration</span>;
+    return <span style={{color:'#c45846',fontSize:'12px',fontStyle:'italic'}}>No swivel found for this configuration. Try entering new parameters.</span>;
   },
   
   render() {
@@ -250,78 +249,236 @@ const App = React.createClass({
               Swivel: {swivel}
               {/* NOT WORKING WITH MULTIPLE CONDITIONS...? Refactor: Try creating headType function that contains logic and using it here */}
             </div>
-            <div className="tab-row bg-lt-grey">
           
-              {swivel === 'BJV-P16-S' && (
+            {swivel === 'BJV-P16-S' && (
+            <div className="tab-row bg-lt-grey">
               <div>
-                
                 <label htmlFor="portSize" className="even">Head Type: </label>  <select id="headType" defaultValue={this.state.headType} onChange={this.setHeadType}>
-                  <option>6-Port</option>
-                </select>
-                <label htmlFor="portSize" className="even" style={{marginLeft:'40px'}}>Port Size: </label>
-                <select id="portSize" defaultValue={this.state.portSize} onChange={this.setPortSize}>
-                  <option>P12</option>
-                  <option>P8</option>
+                  <option>6-Port, P12, with extensions</option>
+                  <option>6-Port, P8, with extensions</option>
                 </select> <button className="pull-right" onClick={this.toggleVisibility.bind(null, 'backoutTip')}>?</button>
                 <div id="backoutTip" className="media" style={infoMsg}>
                   <div className="media-body">
-                    <p>The standard head configuration for this swivel is:<br/> 6-port with extensions.</p>
-                    <p>Extensions will be selected for pipe size specified.</p>
-                    <p>Custom heads are available. Please specify additional instructions in the Notes section.</p>
+                    <p>Select the head with the port size required.</p>
+                    <p>A 6-port head configuration with extensions to fit the specified pipe size is standard for this swivel.</p>
+                    <p>Custom heads are available &mdash; please specify additional instructions in the Notes section.</p>
                   </div>
                   <span className="media-right">
                       <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
                   </span>
                 </div>
-          
               </div>
-              )}
-          
-              {swivel === 'BJV-P12-S' && (
-              <div>
-                <label htmlFor="headType" className="even">Head Type: </label>
-                <select id="headType" defaultValue={this.state.headType} onChange={this.setHeadType}>
-                  <optgroup>
-                    <option>6-Port</option>
-                    <option>7-Port</option>
-                  </optgroup>
-                </select>
-                <label htmlFor="portSize" className="even" style={{marginLeft:'21px'}}>Port Size: </label>
-                <select id="portSize" defaultValue={this.state.portSize} onChange={this.setPortSize}>
-                  <optgroup>
-                    <option>P12</option>
-                    <option>P8</option>
-                  </optgroup>
-                </select>
-              </div>
-              )}
-
-              {swivel === 'BJV-P-S' && (
-                <div>
-                <label htmlFor="headType" className="even">Head Type: </label>
-                <select id="headType" defaultValue={this.state.headType} onChange={this.setHeadType}>
-                  <optgroup>
-                    <option>6-Port</option>
-                    <option>7-Port</option>
-                  </optgroup>
-                </select>
-                <select id="portSize" defaultValue={this.state.portSize} onChange={this.setPortSize}>
-                  <optgroup>
-                    <option>P6</option>
-                    <option>P8</option>
-                  </optgroup>
-                </select>
-              </div>
-              )}
-
-              
-              
             </div>
+            )}
+
+            {swivel === 'BJV-P16-F' && (
+            <div className="tab-row bg-lt-grey">
+              <div>
+                <label htmlFor="portSize" className="even">Head: </label>  <select id="headType" defaultValue={this.state.headType} onChange={this.setHeadType}>
+                  <option>6-Port, P12, with extensions</option>
+                  <option>6-Port, P8, with extensions</option>
+                </select> <button className="pull-right" onClick={this.toggleVisibility.bind(null, 'backoutTip')}>?</button>
+                <div id="backoutTip" className="media" style={infoMsg}>
+                  <div className="media-body">
+                    <p>Select the head with the port size required.</p>
+                    <p>A 6-port head configuration with extensions to fit the specified pipe size is standard for this swivel.</p>
+                    <p>Custom heads are available &mdash; please specify additional instructions in the Notes section.</p>
+                  </div>
+                  <span className="media-right">
+                      <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                  </span>
+                </div>
+              </div>
+            </div>
+            )}
+          
+            {swivel === 'BJV-P12-S' && (
+            <div className="tab-row bg-lt-grey">
+              <div>
+                <label htmlFor="portSize" className="even">Head Type: </label>  <select id="headType" defaultValue={this.state.headType} onChange={this.setHeadType}>
+                  <option>6-Port, P4, No extensions</option>
+                  <option>6-Port, P8, with extensions</option>
+                  <option>7-Port, P4, No extensions</option>
+                </select> <button className="pull-right" onClick={this.toggleVisibility.bind(null, 'backoutTip')}>?</button>
+                <div id="backoutTip" className="media" style={infoMsg}>
+                  <div className="media-body">
+                    <p>Select the appropriate head with the port size required.</p>
+                    <p>This swivel can be configured with a 6-port head or a 7-port head.</p>
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                    <p>Custom heads are available &mdash; please specify additional instructions in the Notes section.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            )}
+          
+            {swivel === 'BJV-P12-F' && (
+            <div className="tab-row bg-lt-grey">
+              <div>
+                <label htmlFor="portSize" className="even">Head Type: </label>  <select id="headType" defaultValue={this.state.headType} onChange={this.setHeadType}>
+                  <option>6-Port, P4, No extensions</option>
+                  <option>6-Port, P8, with extensions</option>
+                  <option>7-Port, P4, No extensions</option>
+                </select> <button className="pull-right" onClick={this.toggleVisibility.bind(null, 'backoutTip')}>?</button>
+                <div id="backoutTip" className="media" style={infoMsg}>
+                  <div className="media-body">
+                    <p>Select the appropriate head with the port size required.</p>
+                    <p>This swivel can be configured with a 6-port head or a 7-port head.</p>
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                    <p>Custom heads are available &mdash; please specify additional instructions in the Notes section.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            )}
+          
+            {swivel === 'BJV-M24-S' && (
+            <div className="tab-row bg-lt-grey">
+              <div>
+                <label htmlFor="portSize" className="even">Head Type: </label>  <select id="headType" defaultValue={this.state.headType} onChange={this.setHeadType}>
+                  <option>6-Port, P4, No extensions</option>
+                  <option>6-Port, G12, with extensions</option>
+                  <option>7-Port, P4, No extensions</option>
+                </select> <button className="pull-right" onClick={this.toggleVisibility.bind(null, 'backoutTip')}>?</button>
+                <div id="backoutTip" className="media" style={infoMsg}>
+                  <div className="media-body">
+                    <p>Select the appropriate head with the port size required.</p>
+                    <p>This swivel can be configured with a 6-port head or a 7-port head.</p>
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                    <p>Custom heads are available &mdash; please specify additional instructions in the Notes section.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            )}
+          
+            {swivel === 'BJV-M24-F' && (
+            <div className="tab-row bg-lt-grey">
+              <div>
+                <label htmlFor="portSize" className="even">Head Type: </label>  <select id="headType" defaultValue={this.state.headType} onChange={this.setHeadType}>
+                  <option>6-Port, P4, No extensions</option>
+                  <option>6-Port, G12, with extensions</option>
+                  <option>7-Port, P4, No extensions</option>
+                </select> <button className="pull-right" onClick={this.toggleVisibility.bind(null, 'backoutTip')}>?</button>
+                <div id="backoutTip" className="media" style={infoMsg}>
+                  <div className="media-body">
+                    <p>Select the appropriate head with the port size required.</p>
+                    <p>This swivel can be configured with a 6-port head or a 7-port head.</p>
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                    <p>Custom heads are available &mdash; please specify additional instructions in the Notes section.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            )}
+          
+            {swivel === 'BJV-MP12-S' && (
+            <div className="tab-row bg-lt-grey">
+              <div>
+                <label htmlFor="portSize" className="even">Head Type: </label>  <select id="headType" defaultValue={this.state.headType} onChange={this.setHeadType}>
+                  <option>6-Port, P4, No extensions</option>
+                  <option>6-Port, G12, with extensions</option>
+                  <option>7-Port, P4, No extensions</option>
+                </select> <button className="pull-right" onClick={this.toggleVisibility.bind(null, 'backoutTip')}>?</button>
+                <div id="backoutTip" className="media" style={infoMsg}>
+                  <div className="media-body">
+                    <p>Select the appropriate head with the port size required.</p>
+                    <p>This swivel can be configured with a 6-port head or a 7-port head.</p>
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                    <p>Custom heads are available &mdash; please specify additional instructions in the Notes section.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            )}
+          
+            {swivel === 'BJV-MP12-F' && (
+            <div className="tab-row bg-lt-grey">
+              <div>
+                <label htmlFor="portSize" className="even">Head Type: </label>  <select id="headType" defaultValue={this.state.headType} onChange={this.setHeadType}>
+                  <option>6-Port, P4, No extensions</option>
+                  <option>6-Port, G12, with extensions</option>
+                  <option>7-Port, P4, No extensions</option>
+                </select> <button className="pull-right" onClick={this.toggleVisibility.bind(null, 'backoutTip')}>?</button>
+                <div id="backoutTip" className="media" style={infoMsg}>
+                  <div className="media-body">
+                    <p>Select the appropriate head with the port size required.</p>
+                    <p>This swivel can be configured with a 6-port head or a 7-port head.</p>
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                    <p>Custom heads are available &mdash; please specify additional instructions in the Notes section.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            )}
+          
+            {swivel === 'BJV-H9-S' && (
+            <div className="tab-row bg-lt-grey">
+              <div>
+                <label htmlFor="portSize" className="even">Head Type: </label>  <select id="headType" defaultValue={this.state.headType} onChange={this.setHeadType}>
+                  <option>6-Port, S6, No extensions</option>
+                  <option>6-Port, G9, with extensions</option>
+                  <option>8-Port, S6, No extensions</option>
+                </select> <button className="pull-right" onClick={this.toggleVisibility.bind(null, 'backoutTip')}>?</button>
+                <div id="backoutTip" className="media" style={infoMsg}>
+                  <div className="media-body">
+                    <p>Select the appropriate head with the port size required.</p>
+                    <p>This swivel can be configured with a 6-port head or a 8-port head.</p>
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                    <p>Custom heads are available &mdash; please specify additional instructions in the Notes section.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            )}
+
+            {swivel === 'BJV-H9-F' && (
+            <div className="tab-row bg-lt-grey">
+              <div>
+                <label htmlFor="portSize" className="even">Head Type: </label>  <select id="headType" defaultValue={this.state.headType} onChange={this.setHeadType}>
+                  <option>6-Port, S6, No extensions</option>
+                  <option>6-Port, G9, with extensions</option>
+                  <option>8-Port, S6, No extensions</option>
+                </select> <button className="pull-right" onClick={this.toggleVisibility.bind(null, 'backoutTip')}>?</button>
+                <div id="backoutTip" className="media" style={infoMsg}>
+                  <div className="media-body">
+                    <p>Select the appropriate head with the port size required.</p>
+                    <p>This swivel can be configured with a 6-port head or a 8-port head.</p>
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                    <img src="http://www.stoneagetools.com/assets/img/product/thumb-bjv-05.jpg" alt="..." />
+                    <p>Custom heads are available &mdash; please specify additional instructions in the Notes section.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            )}
+
+            
+            <div>
+              <hr />
+              <p><a href="http://jetting.stoneagetools.com/tool/jetting-app.html" target="_blank"><i className="fa fa-plane"></i> See our Jetting Calculator for detailed tool jetting information.</a></p>
+            </div>
+              
             <div className="prev-next">
               <button onClick={this.changeTab.bind(null, 1)} className="pull-left btn btn-gray">Previous</button>
               <button onClick={this.changeTab.bind(null, 3)} className="pull-right btn btn-gray">Next: Options</button>
             </div>
-              
+             
           </div>
         )}
 
@@ -458,13 +615,10 @@ const App = React.createClass({
                 Inlet Connection: {this.state.inlet}<br/>
                 Hose Size: {this.state.hoseSize}<br/>
                 Hose Length: {this.state.hoseLength}<br/><hr/>
-                Swivel: {this.getSwivel()}<br/>
-                {swivel.type !== 'span' && (
-                  <div>
-                Head Type: {this.state.headType}<br/>
-                Port Size: {this.state.portSize}
-                  </div>
-                )}
+                Swivel: {swivel}<br/>
+                {swivel.type !== 'span' &&
+                  <div>Head Type: {this.state.headType}</div>
+                }
               </div>
               <div className="col-sm-6">
                 <h2>Optional Items</h2>

@@ -1,4 +1,4 @@
-#appContent  * {
+#appContent * {
   font: 300 14px/1.4 'Helvetica Neue', Helvetica, Arial, sans-serif;
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -12,6 +12,13 @@
 }
 #appContent h2:first-of-type {
   margin-top:0;
+}
+#appContent p {
+  margin:0;
+  padding: 5px 0;
+}
+#appContent i {
+  font: normal normal normal 14px/1 FontAwesome;
 }
 #appContent .tab-nav {
   display: inline-block;
