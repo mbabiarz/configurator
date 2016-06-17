@@ -191,13 +191,29 @@ const App = React.createClass({
             {/* INLET */}
             <div className="tab-row bg-lt-grey">
               <label className="even-120">Inlet Connection</label>
+              {/* Filter inlet options for higher pressures */}
+              {this.state.pressure <= 10000 && (
               <select id="inlet" defaultValue={this.state.inlet} onChange={this.setInlet}>
-              <option value='1 NPT'>1 NPT</option>
-              <option value='3/4 NPT'>3/4 NPT</option>
-              <option value='M24'>M24</option>
-              <option value='3/4 MP'>3/4 MP</option>
-              <option value='9/16 HP'>9/16 HP</option>
+                <option value='1 NPT'>1 NPT</option>
+                <option value='3/4 NPT'>3/4 NPT</option>
+                <option value='M24'>M24</option>
+                <option value='3/4 MP'>3/4 MP</option>
               </select>
+              )}
+              
+              {this.state.pressure > 10000 && this.state.pressure <=  22000 && (
+              <select id="inlet" defaultValue={this.state.inlet} onChange={this.setInlet}>
+                <option value='3/4 NPT'>3/4 NPT</option>
+                <option value='M24'>M24</option>
+                <option value='3/4 MP'>3/4 MP</option>
+              </select>
+              )}
+              
+              {this.state.pressure > 22000 && (
+              <select id="inlet" defaultValue={this.state.inlet} onChange={this.setInlet}>
+                <option value='9/16 HP'>9/16 HP</option>
+              </select>
+              )}
             </div>
             {/* HOSE SIZE */}
             <div className="tab-row">
