@@ -101,6 +101,7 @@ const App = React.createClass({
     var f = this.state.flow;
     var i = this.state.inlet;
     var r = this.state.rotation;
+    var s = this.state.swivel;
     
     var swivels = ['BJV-P16-S', 'BJV-P16-F', 'BJV-P12-S', 'BJV-P12-F', 'BJV-M24-S', 'BJV-M24-F', 'BJV-MP12-S', 'BJV-MP12-F', 'BJV-H9-S', 'BJV-H9-F'];
     var p16logic = p >= 2000 && p <= 10000 && f >= 20 && f <= 200 && i === '1 NPT';
@@ -122,12 +123,36 @@ const App = React.createClass({
     return <span style={{color:'#c45846',fontSize:'12px',fontStyle:'italic'}}>No swivel found for this configuration. Try entering new parameters.</span>;
   },
   
+  setSwivel:function(swivel) {
+    this.setState({swivel: swivel});
+    console.log(swivel);
+  },
+  
+  getHeadType: function () {
+    var s = this.state.swivel;
+    
+    var heads = ['6-Port, P12, with extensions', '6-Port, P8, with extensions', '6-Port, P4, No extensions', '7-Port, P4, No extensions', '6-Port, G12, with extensions', '6-Port, S6, No extensions', '8-Port, S6, No extensions', '6-Port, G9, with extensions'];
+    var p16logic = s === 'BJV-P16-S' && s === 'BJV-P16-F';
+    var p12logic = s === 'BJV-P12-S' && s === 'BJV-P12-F';
+    var mlogic = s === 'BJV-M24-S' && s === 'BJV-M24-F' && 'BJV-MP12-S' && s === 'BJV-MP12-F';
+    var h9logic = s === 'BJV-H9-S' && s === 'BJV-H9-F';
+    if (p16logic) { var p16heads = heads[0,1]; return p16heads; }
+    if (p12logic) { return heads[2,3,1]; }
+    if (mlogic) { return heads[2,3,4]; }
+    if (h9logic) { return heads[5,6,7]; }
+    
+    console.log(s);
+    console.log(p16heads);
+    return <span style={{color:'#c45846',fontSize:'12px',fontStyle:'italic'}}>No head found for this configuration. Try entering new parameters.</span>;
+  },
+                              
   render() {
     var styleInline = { display:'inline' };
     var errorMsg = { color:'#c45846', margin:0, fontSize:'12px', fontStyle:'italic' };
     var infoMsg = { color:'#888', margin:'10px', fontSize:'12px', fontStyle:'italic', display:'none' };
     var tab = this.state.tab;
     var swivel = this.getSwivel();
+    var heads = this.getHeadType();
     
     return (
       <div>
@@ -135,7 +160,8 @@ const App = React.createClass({
         <h1>Configure your equipment</h1>
         
         {/* TAB NAV */}
-        <span onClick={this.changeTab.bind(null, 1)} className={this.getActiveClass(1)}>1. Parameters</span>
+        <span onClick={this.changeTab.bind(null, 1)}
+           className={this.getActiveClass(1)}>1. Parameters</span>
         <span onClick={this.changeTab.bind(null, 2)} className={this.getActiveClass(2)}>2. Head Selection</span>
         <span onClick={this.changeTab.bind(null, 3)} className={this.getActiveClass(3)}>3. Options</span>
         <span onClick={this.changeTab.bind(null, 4)} className={this.getActiveClass(4)}>4. Notes</span>
@@ -262,8 +288,9 @@ const App = React.createClass({
             If [Pressure, Flow, Inlet, Rotation], set swivel=something. Then, based on swivel, display appropriate head choices. OR try fitting that login into getSwivel()!
             */}
             <div className="tab-row">
-              Swivel: {swivel}
-              {/* NOT WORKING WITH MULTIPLE CONDITIONS...? Refactor: Try creating headType function that contains logic and using it here */}
+              Swivel: {swivel}<br/>
+              <span onClick={this.setSwivel.bind(null, swivel)}>Swivel State: {this.state.swivel}</span><br/>
+              Heads: {this.getHeadType()}
             </div>
           
             {swivel === 'BJV-P16-S' && (
